@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+:root {
+  /* NutSphere Brand Colors */
+  --ns-green-primary: #4CAF50;
+  --ns-green-dark: #388E3C;
+  --ns-green-light: #81C784;
+  --ns-green-pale: #E8F5E9;
+  --ns-charcoal: #333333;
+  --ns-gray-dark: #555555;
+  --ns-gray-medium: #888888;
+  --ns-gray-light: #f5f5f5;
+  --ns-white: #ffffff;
+  --ns-accent: #8BC34A;
+  
+  --background: #ffffff;
+  --foreground: #333333;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-ns-green: var(--ns-green-primary);
+  --color-ns-green-dark: var(--ns-green-dark);
+  --color-ns-green-light: var(--ns-green-light);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ns-green-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ns-green-dark);
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid var(--ns-green-primary);
+  outline-offset: 2px;
+}
+
+/* Button base styles */
+.btn-primary {
+  background-color: var(--ns-green-primary);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--ns-green-dark);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--ns-green-primary);
+  border: 2px solid var(--ns-green-primary);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--ns-green-pale);
+}
+
+/* Card styles */
+.card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Section padding */
+.section-padding {
+  padding: 4rem 0;
+}
+
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 2rem 0;
+  }
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--ns-green-primary) 0%, var(--ns-green-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Trust badge */
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--ns-green-pale);
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  color: var(--ns-green-dark);
+  font-weight: 500;
+}

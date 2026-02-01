@@ -1,0 +1,446 @@
+📌 GitHub Copilot – Master Prompt
+
+(Production-level E-commerce Website)
+
+🔥 SYSTEM / CONTEXT
+
+You are a senior full-stack engineer building a production-ready e-commerce website for selling nuts & food products.
+This is NOT a demo, NOT a UI-only app, and NO mock/dummy logic is allowed.
+
+All features must be fully implemented, secure, scalable, and deployable.
+
+🧱 TECH STACK (MANDATORY)
+
+Frontend & Backend: Next.js (App Router, TypeScript)
+
+Styling: Tailwind CSS
+
+Database: Supabase (PostgreSQL)
+
+Auth: Supabase Auth
+
+Storage: Supabase Storage (product images, review images, refund proofs)
+
+Payments: Razorpay (real integration, signature verification)
+
+Deployment: Vercel (Free tier compatible)
+
+State Management: Server Components + minimal client state
+
+Security: Supabase Row Level Security (RLS)
+
+No dummy APIs, no fake data, no local file storage
+
+🛒 USER-SIDE FEATURES (FULLY IMPLEMENT)
+1️⃣ Product Listing Page
+
+Grid layout with:
+
+Clear optimized product images (from Supabase Storage)
+
+MRP + discount calculation
+
+Average rating + total review count
+
+Stock status (In stock / Out of stock)
+
+Pagination or infinite scroll (production-safe)
+
+SEO-friendly URLs (/products/[slug])
+
+2️⃣ Product Detail Page
+
+Multiple images with zoom
+
+Full product description
+
+Specifications & variants (size / pack)
+
+Pincode-based delivery estimate (real logic placeholder allowed, NOT hardcoded)
+
+Refund policy clearly shown (no returns, refund only for damaged/wrong item)
+
+Ratings breakdown & reviews
+
+3️⃣ Search (REAL IMPLEMENTATION)
+
+Fast keyword search
+
+Auto-suggest results
+
+Fuzzy search / typo handling
+
+Indexed database queries (no client-side filtering)
+
+4️⃣ Filters & Sorting
+
+Price range
+
+Category
+
+Rating
+
+Sorting:
+
+Newest
+
+Popular
+
+Price Low → High
+
+Price High → Low
+
+5️⃣ Shopping Cart
+
+Add / remove items
+
+Quantity update
+
+Server-validated pricing
+
+Price breakdown:
+
+Items
+
+Tax
+
+Shipping
+
+Cart persisted in database (not localStorage)
+
+6️⃣ Guest Checkout
+
+Allow checkout without signup
+
+Create temporary user/session
+
+Convert guest → user after order completion (optional)
+
+7️⃣ Secure Checkout
+
+Address management (multiple addresses)
+
+Order summary before payment
+
+No hidden charges
+
+Razorpay payment with:
+
+Order creation on backend
+
+Signature verification
+
+Payment failure handling
+
+8️⃣ Payment Options
+
+UPI
+
+Debit / Credit Cards
+
+Net Banking
+
+Razorpay-supported wallets
+
+9️⃣ User Account
+
+Profile management
+
+Address book
+
+Order history
+
+Invoice download (PDF)
+
+Order tracking with courier link
+
+Email + SMS notifications
+
+Wishlist (move to cart)
+
+🔁 Refund System (NO RETURNS)
+
+User can request refund only for:
+
+Damaged product
+
+Wrong item
+
+Upload images/videos as proof
+
+Refund request within fixed time window
+
+Refund status tracking
+
+⭐ Ratings & Reviews
+
+Only verified buyers can review
+
+Star rating summary
+
+Admin can reply to reviews
+
+Admin can delete abusive/spam reviews
+
+Soft delete preferred
+
+🔐 Trust & UX
+
+Secure payment badges
+
+Refund policy visible
+
+Customer support section
+
+FAQ
+
+Fully mobile-first
+
+Accessible UI
+
+Pages load < 3 seconds
+
+Optimized images
+
+🧑‍💼 ADMIN DASHBOARD (REAL, SECURE)
+Admin Access
+
+Secure admin login
+
+Role-based access:
+
+Owner
+
+Admin
+
+Staff
+
+Backend-enforced permissions (RLS)
+
+Audit logs
+
+Logout all sessions
+
+1️⃣ Dashboard Overview
+
+Today’s orders
+
+Today’s revenue
+
+Pending orders
+
+Refund requests
+
+Low stock alerts
+
+Best-selling products
+
+Charts:
+
+Daily / weekly sales
+
+Order trends
+
+2️⃣ Product Management
+
+Add / edit / delete products
+
+Upload multiple images to Supabase Storage
+
+Set:
+
+Price & discount
+
+Weight / pack size
+
+Category
+
+Stock
+
+Auto in-stock / out-of-stock
+
+SEO fields
+
+3️⃣ Inventory Management
+
+Live stock count
+
+Low-stock alerts
+
+Manual stock adjustments
+
+Stock movement logs
+
+4️⃣ Order Management
+
+View all orders
+
+Order details:
+
+Customer
+
+Products
+
+Payment status
+
+Address
+
+Update status:
+
+Pending → Packed → Shipped → Delivered
+
+Cancel before shipping
+
+Invoice download
+
+5️⃣ Refund Management
+
+View refund requests
+
+View uploaded proof
+
+Approve / reject
+
+Add admin notes
+
+Trigger Razorpay refund
+
+Track refund status
+
+6️⃣ Customer Management
+
+View customers
+
+Order history per customer
+
+Block abusive users
+
+7️⃣ Payments & Reports
+
+Payment status
+
+Settlement reports
+
+Match orders with payouts
+
+Export CSV
+
+8️⃣ Coupons & Discounts
+
+Create coupons
+
+Percentage / flat discount
+
+Expiry date
+
+Usage limits
+
+Enable / disable
+
+9️⃣ Shipping & Delivery
+
+Assign courier
+
+Add tracking ID
+
+Update delivery status
+
+Timeline view
+
+🔔 Notifications
+
+New order
+
+Low stock
+
+Refund request
+
+📄 CMS
+
+About Us
+
+Refund Policy
+
+Privacy Policy
+
+Terms
+
+Homepage banners
+
+Announcements
+
+🔐 SECURITY & BACKEND RULES (MANDATORY)
+
+Supabase RLS for:
+
+Users see only their data
+
+Admin sees all
+
+No frontend-only authorization
+
+No service role key exposed
+
+Razorpay webhook verification
+
+Input validation everywhere
+
+No sensitive data in client
+
+No dummy auth / mock payments
+
+🚀 DEPLOYMENT RULES
+
+Compatible with Vercel Free Tier
+
+No large files in repo
+
+All media from Supabase Storage
+
+Environment variables handled correctly
+
+npm run build must pass
+
+❌ STRICTLY FORBIDDEN
+
+Dummy APIs
+
+Fake payment success
+
+Hardcoded admin access
+
+Local file uploads
+
+Skipping RLS
+
+UI-only implementation
+
+🎯 OUTPUT EXPECTATION
+
+Generate:
+
+Folder structure
+
+Database usage (Supabase)
+
+API routes
+
+Secure logic
+
+Production-ready components
+
+Clean, maintainable code
+
+Comments explaining critical logic
+
+✅ FINAL GOAL
+
+A fully functional, secure, production-level e-commerce website ready to:
+
+Deploy on Vercel
+
+Handle real customers
+
+Handle real payments
+
+Scale safely

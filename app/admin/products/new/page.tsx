@@ -1,0 +1,230 @@
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
+import Link from 'next/link'
+import ProductForm from '../product-form'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Admin - Add Product | E-Commerce Store',
+  description: 'Create a new product',
+}
+
+export default async function AdminNewProductPage() {
+  const cookieStore = await cookies()
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            cookieStore.set(name, value, options)
+          )
+        },
+      },
+    }
+  )
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/auth/login')
+  }
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (profile?.role !== 'admin') {
+    redirect('/')
+  }
+
+  // Only show main categories: Nuts and Seeds
+  const { data: categories } = await supabase
+    .from('categories')
+    .select('id, name')
+    .in('slug', ['nuts', 'seeds'])
+    .order('name', { ascending: true })
+
+  async function createProduct(formData: FormData) {
+    'use server'
+    try {
+      const name = ((formData.get('name') as string) ?? '').trim()
+      const categoryId = ((formData.get('category_id') as string) ?? '')
+      const price = Number(formData.get('price') || 0)
+      const discount = Number(formData.get('discount_percentage') || 0)
+      const stock = Number(formData.get('stock_quantity') || 0)
+      const weight = formData.get('weight_grams')
+        ? Number(formData.get('weight_grams'))
+        : null
+      const sku = ((formData.get('sku') as string) ?? '').trim()
+      const description = ((formData.get('description') as string) ?? '').trim()
+      const isActive = formData.get('is_active') === 'on'
+      const imagesRaw = ((formData.get('images') as string) ?? '').trim()
+      const images = imagesRaw
+        ? imagesRaw.split(',').map((img) => img.trim()).filter(Boolean)
+        : []
+      
+      // Parse variants
+      const variantsRaw = formData.get('variants') as string
+      let variants: any[] = []
+      if (variantsRaw) {
+        try {
+          variants = JSON.parse(variantsRaw)
+        } catch (e) {
+          console.error('Failed to parse variants:', e)
+        }
+      }
+
+      // Validation
+      if (!name || !categoryId || !price) {
+        throw new Error('Product name, category, and price are required')
+      }
+
+      if (price <= 0) {
+        throw new Error('Price must be greater than 0')
+      }
+
+      if (discount < 0 || discount > 100) {
+        throw new Error('Discount must be between 0 and 100')
+      }
+
+      if (stock < 0) {
+        throw new Error('Stock quantity cannot be negative')
+      }
+
+      const slug = name
+        .toLowerCase()
+        .trim()
+        .split(/\s+/)
+        .join('-')
+
+      const actionCookieStore = await cookies()
+      const actionSupabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+          cookies: {
+            getAll() {
+              return actionCookieStore.getAll()
+            },
+            setAll(cookiesToSet) {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                actionCookieStore.set(name, value, options)
+              )
+            },
+          },
+        }
+      )
+
+      const { data: { user: actionUser } } = await actionSupabase.auth.getUser()
+      if (!actionUser) {
+        throw new Error('Not authenticated')
+      }
+
+      const { data: actionProfile } = await actionSupabase
+        .from('profiles')
+        .select('role')
+        .eq('id', actionUser.id)
+        .single()
+
+      if (actionProfile?.role !== 'admin') {
+        throw new Error('Not authorized')
+      }
+
+      const { data, error } = await actionSupabase.from('products').insert({
+        name,
+        slug,
+        category_id: categoryId,
+        price,
+        discount_percentage: discount,
+        stock_quantity: stock,
+        weight_grams: weight,
+        is_active: isActive,
+        description: description || null,
+        images,
+        sku: sku || null,
+      } as any).select()
+
+      if (error) {
+        throw new Error(`Failed to create product: ${error.message}`)
+      }
+
+      if (!data || data.length === 0) {
+        throw new Error('Product created but could not verify')
+      }
+
+      const productId = data[0].id
+
+      // Save variants if any
+      if (variants.length > 0) {
+        const variantsToInsert = variants.map((v: any, index: number) => ({
+          product_id: productId,
+          name: v.name,
+          weight_grams: v.weight_grams || null,
+          price: v.price,
+          compare_at_price: v.compare_at_price || null,
+          sku: v.sku || null,
+          stock_quantity: v.stock_quantity || 0,
+          is_default: v.is_default || false,
+          is_active: v.is_active !== false,
+          display_order: index,
+        }))
+
+        const { error: variantsError } = await actionSupabase
+          .from('product_variants')
+          .insert(variantsToInsert)
+
+        if (variantsError) {
+          console.error('Failed to create variants:', variantsError)
+          throw new Error(`Failed to create variants: ${variantsError.message}`)
+        }
+      }
+
+      // Revalidate the products page to show the new product
+      revalidatePath('/admin/products')
+      redirect('/admin/products')
+    } catch (error) {
+      console.error('Create product error:', error)
+      throw error
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="bg-white shadow">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center gap-4 mb-2">
+            <Link
+              href="/admin/dashboard"
+              className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+            >
+              ← Dashboard
+            </Link>
+            <span className="text-gray-400">/</span>
+            <Link
+              href="/admin/products"
+              className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+            >
+              Products
+            </Link>
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900">Add Product</h1>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <ProductForm categories={categories || []} onSubmit={createProduct} />
+      </div>
+    </div>
+  )
+}
