@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import SearchBar from './search-bar'
 import CartIcon from './cart-icon'
 import UserMenu from './user-menu'

@@ -59,6 +59,7 @@ export async function GET(
         user_id,
         total_amount,
         subtotal,
+        shipping_cost,
         payment_status,
         payment_method,
         status,
@@ -107,13 +108,14 @@ export async function GET(
       day: 'numeric',
     })
 
-    // Convert from paisa to rupees
-    const subtotal = (order.order_items?.reduce(
+    // Calculate amounts (already in rupees)
+    const subtotal = order.subtotal || order.order_items?.reduce(
       (sum: number, item: any) => sum + item.quantity * item.unit_price,
       0
-    ) || 0) / 100
+    ) || 0
 
-    const totalAmount = (order.total_amount || 0) / 100
+    const shippingCost = order.shipping_cost || 0
+    const totalAmount = order.total_amount || 0
 
     const invoiceHTML = `
 <!DOCTYPE html>
@@ -142,7 +144,7 @@ export async function GET(
       border: 1px solid #e5e5e5;
     }
     .invoice-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       color: white;
       padding: 30px;
       display: flex;
@@ -150,12 +152,15 @@ export async function GET(
       align-items: flex-start;
     }
     .company-info h1 {
-      font-size: 28px;
-      margin-bottom: 5px;
+      font-size: 32px;
+      margin-bottom: 8px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
     }
     .company-info p {
-      font-size: 12px;
-      opacity: 0.9;
+      font-size: 13px;
+      opacity: 0.95;
+      margin: 2px 0;
     }
     .invoice-details {
       text-align: right;
@@ -314,9 +319,10 @@ export async function GET(
   <div class="invoice-container">
     <div class="invoice-header">
       <div class="company-info">
-        <h1>E-Commerce Store</h1>
-        <p>Your trusted online shopping destination</p>
-        <p>support@ecommerce-store.com</p>
+        <h1>NutSphere</h1>
+        <p>Premium Nuts & Seeds Store</p>
+        <p>H.NO 84, Shivkalyan Nagar Loha, Dist-Nanded 431708</p>
+        <p>Phone: +91 87665 00291 | Email: Hello@nutsphere.com</p>
       </div>
       <div class="invoice-details">
         <h2>INVOICE</h2>
@@ -366,8 +372,8 @@ export async function GET(
                 ${item.products?.sku ? `<div class="sku">SKU: ${item.products.sku}</div>` : ''}
               </td>
               <td class="text-center">${item.quantity}</td>
-              <td class="text-right">₹${(item.unit_price / 100).toFixed(2)}</td>
-              <td class="text-right">₹${((item.quantity * item.unit_price) / 100).toFixed(2)}</td>
+              <td class="text-right">₹${item.unit_price.toFixed(2)}</td>
+              <td class="text-right">₹${(item.quantity * item.unit_price).toFixed(2)}</td>
             </tr>
           `).join('') || ''}
         </tbody>
@@ -381,10 +387,10 @@ export async function GET(
           </div>
           <div class="total-row">
             <span>Shipping</span>
-            <span>₹0.00</span>
+            <span>${shippingCost === 0 ? 'FREE' : '₹' + shippingCost.toFixed(2)}</span>
           </div>
-          <div class="total-row">
-            <span>Tax</span>
+          <div class="total-row" style="color: #10b981;">
+            <span>GST</span>
             <span>Included</span>
           </div>
           <div class="total-row grand-total">

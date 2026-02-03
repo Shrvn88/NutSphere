@@ -110,6 +110,7 @@ export default function CheckoutForm({ user, savedAddresses, onPaymentMethodChan
     // If COD, redirect directly to order page
     if (paymentMethod === 'cod') {
       router.push(`/orders/${result.orderId}`)
+      router.refresh()
       return
     }
     
@@ -154,8 +155,9 @@ export default function CheckoutForm({ user, savedAddresses, onPaymentMethodChan
           const verifyData = await verifyResponse.json()
 
           if (verifyData.success) {
-            // Redirect to order confirmation
+            // Redirect to order confirmation and refresh to clear cart
             router.push(`/orders/${result.orderId}`)
+            router.refresh()
           } else {
             setError('Payment verification failed. Please contact support.')
             setLoading(false)

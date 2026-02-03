@@ -99,18 +99,52 @@ export async function PATCH(
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
+    console.log('🔵 Order updated. Status from body:', body.status, 'Type:', typeof body.status)
+    console.log('🔵 Order data:', { customer_name: order?.customer_name, customer_email: order?.customer_email, order_number: order?.order_number })
+
+    let emailStatus = 'not_attempted'
+    let emailError = null
+
     // Send delivery confirmation email if order status changed to delivered
     if (body.status === 'delivered' && order) {
-      sendOrderDeliveredEmail(
-        order.customer_name,
-        order.customer_email,
-        order.order_number
-      ).catch(error => {
-        console.error('Failed to send delivery confirmation email:', error)
+      console.log('✅ CONDITION MET - SENDING DELIVERY EMAIL to:', order.customer_email, 'for order:', order.order_number)
+      emailStatus = 'attempting'
+      
+      try {
+        const emailResult = await sendOrderDeliveredEmail(
+          order.customer_name,
+          order.customer_email,
+          order.order_number
+        )
+        console.log('✅ Email sent successfully:', emailResult)
+        emailStatus = 'sent'
+      } catch (error: any) {
+        console.error('❌ Failed to send delivery confirmation email:', error)
+        emailStatus = 'failed'
+        emailError = error.message
+      }
+    } else {
+      console.log('❌ CONDITION NOT MET - NOT sending email. Debug:', { 
+        'body.status': body.status,
+        'body.status type': typeof body.status,
+        'is delivered?': body.status === 'delivered',
+        'hasOrder': !!order,
+        'order.customer_email': order?.customer_email,
+        'order.customer_name': order?.customer_name
       })
+      emailStatus = 'skipped'
     }
 
-    return NextResponse.json({ success: true, order })
+    return NextResponse.json({ 
+      success: true, 
+      order,
+      emailDebug: {
+        status: emailStatus,
+        error: emailError,
+        bodyStatus: body.status,
+        orderEmail: order?.customer_email
+      }
+    })
   } catch (error) {
     console.error('Error in order update:', error)
     return NextResponse.json(

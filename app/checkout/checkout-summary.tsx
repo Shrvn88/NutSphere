@@ -10,10 +10,10 @@ interface CheckoutSummaryProps {
 }
 
 export default function CheckoutSummary({ items, subtotal, discount, paymentMethod }: CheckoutSummaryProps) {
-  // Calculate delivery charges based on payment method
+  // Calculate delivery charges based on payment method  
   const deliveryCharge = paymentMethod === 'cod' ? 49 : 0 // ₹49 for COD, free for online
-  const taxAmount = Math.round(subtotal * 0.18) // 18% GST
-  const totalAmount = subtotal + deliveryCharge + taxAmount
+  const taxAmount = 0 // GST is included in product prices
+  const totalAmount = subtotal + deliveryCharge
   
   return (
     <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
@@ -66,8 +66,8 @@ export default function CheckoutSummary({ items, subtotal, discount, paymentMeth
         </div>
         
         <div className="flex justify-between text-gray-600">
-          <span>Tax (GST 18%)</span>
-          <span>{formatPrice(taxAmount)}</span>
+          <span>GST</span>
+          <span className="text-green-600 font-semibold">Included</span>
         </div>
         
         <div className="border-t pt-2 flex justify-between text-xl font-bold text-gray-900">

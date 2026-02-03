@@ -29,7 +29,6 @@ export default function SignUpPage() {
           data: {
             full_name: fullName,
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       })
 
@@ -40,18 +39,12 @@ export default function SignUpPage() {
       }
 
       if (data.user) {
-        if (data.session) {
-          // User is logged in immediately (email confirmation disabled)
-          setMessage('Account created successfully! Redirecting...')
-          setTimeout(() => {
-            router.push('/')
-            router.refresh()
-          }, 1000)
-        } else {
-          // Email confirmation required
-          setMessage('Account created! Please check your email to confirm your account.')
-          setLoading(false)
-        }
+        // User account created successfully
+        setMessage('Account created successfully! Redirecting...')
+        setTimeout(() => {
+          router.push('/')
+          router.refresh()
+        }, 1000)
       }
     } catch (err) {
       setError('An unexpected error occurred')

@@ -57,9 +57,8 @@ export async function GET(request: Request) {
       .gte('created_at', startDate.toISOString())
       .eq('payment_status', 'paid')
 
-    // Convert from paisa to rupees
     const totalRevenue =
-      (orders?.reduce((sum, order) => sum + order.total_amount, 0) || 0) / 100
+      orders?.reduce((sum, order) => sum + order.total_amount, 0) || 0
     const totalOrders = orders?.length || 0
 
     // Get daily sales data
@@ -75,7 +74,7 @@ export async function GET(request: Request) {
       }
 
       const dayData = salesDataMap.get(date)!
-      dayData.revenue += order.total_amount / 100 // Convert paisa to rupees
+      dayData.revenue += order.total_amount
       dayData.orders += 1
     })
 
@@ -118,7 +117,7 @@ export async function GET(request: Request) {
 
       const productData = productMap.get(productName)!
       productData.sold += item.quantity || 0
-      productData.revenue += ((item.unit_price || 0) * (item.quantity || 0)) / 100 // Convert paisa to rupees
+      productData.revenue += (item.unit_price || 0) * (item.quantity || 0)
     })
 
     const topProducts = Array.from(productMap.values())

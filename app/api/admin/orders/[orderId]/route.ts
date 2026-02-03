@@ -228,13 +228,13 @@ function generateInvoiceHTML(order: any) {
     day: 'numeric',
   })
 
-  // Convert from paisa to rupees
-  const subtotal = (order.order_items?.reduce(
+  // Calculate subtotal from order items
+  const subtotal = order.order_items?.reduce(
     (sum: number, item: any) => sum + item.quantity * item.unit_price,
     0
-  ) || 0) / 100
+  ) || 0
 
-  const totalAmount = (order.total_amount || 0) / 100
+  const totalAmount = order.total_amount || 0
 
   const invoiceHTML = `
 <!DOCTYPE html>
@@ -326,8 +326,8 @@ function generateInvoiceHTML(order: any) {
                 ${item.products?.sku ? `<div style="color: #666; font-size: 11px;">SKU: ${item.products.sku}</div>` : ''}
               </td>
               <td class="text-center">${item.quantity}</td>
-              <td class="text-right">₹${(item.unit_price / 100).toFixed(2)}</td>
-              <td class="text-right">₹${((item.quantity * item.unit_price) / 100).toFixed(2)}</td>
+              <td class="text-right">₹${item.unit_price.toFixed(2)}</td>
+              <td class="text-right">₹${(item.quantity * item.unit_price).toFixed(2)}</td>
             </tr>
           `).join('') || ''}
         </tbody>

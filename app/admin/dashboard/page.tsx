@@ -65,7 +65,7 @@ export default async function AdminDashboard() {
   const totalRevenue = (orders || []).reduce(
     (sum, order) => sum + (order.total_amount || 0),
     0
-  ) / 100 // Convert from paisa to rupees
+  )
   const totalOrders = (orders || []).length
   const totalProducts = (products || []).length
   const totalUsers = (users || []).length

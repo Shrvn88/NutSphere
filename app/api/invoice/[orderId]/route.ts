@@ -24,20 +24,18 @@ export async function GET(request: NextRequest, { params }: Props) {
     // Header - Company Info
     doc.setFontSize(20)
     doc.setFont('helvetica', 'bold')
-    doc.text('E-COMMERCE STORE', 20, yPos)
+    doc.text('NUTSPHERE', 20, yPos)
     
     doc.setFontSize(10)
     doc.setFont('helvetica', 'normal')
     yPos += 10
-    doc.text('123 Business Street', 20, yPos)
+    doc.text('H.NO 84, Shivkalyan Nagar Loha', 20, yPos)
     yPos += 5
-    doc.text('New Delhi, India - 110001', 20, yPos)
+    doc.text('Dist-Nanded 431708, Maharashtra', 20, yPos)
     yPos += 5
-    doc.text('Email: support@ecommerce.com', 20, yPos)
+    doc.text('Email: orders@nutsphere.com', 20, yPos)
     yPos += 5
-    doc.text('Phone: +91 1234567890', 20, yPos)
-    yPos += 5
-    doc.text('GSTIN: 07AABCU9603R1ZV', 20, yPos)
+    doc.text('Phone: +91 87665 00291', 20, yPos)
 
     // Invoice Title (right side)
     doc.setFontSize(24)
@@ -144,8 +142,12 @@ export async function GET(request: NextRequest, { params }: Props) {
     doc.text(order.shipping_cost === 0 ? 'FREE' : formatPrice(order.shipping_cost), 180, yPos, { align: 'right' })
     yPos += 7
 
-    doc.text('Tax (GST 18%):', 140, yPos)
-    doc.text(formatPrice(order.tax_amount), 180, yPos, { align: 'right' })
+    doc.setFontSize(8)
+    doc.setTextColor(0, 128, 0) // Green color
+    doc.text('GST:', 140, yPos)
+    doc.text('Included', 180, yPos, { align: 'right' })
+    doc.setTextColor(0, 0, 0) // Back to black
+    doc.setFontSize(10)
     yPos += 10
 
     doc.line(140, yPos, 190, yPos)

@@ -4,10 +4,40 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
   
-  // Performance: Enable fetch caching
+  // Performance optimizations
   experimental: {
-    optimizePackageImports: ['@supabase/supabase-js'],
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
   },
+
+  // Faster builds
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+
+  // Image optimization
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'ukshvkdnwjjihinumuuw.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    minimumCacheTTL: 60,
+    unoptimized: process.env.NODE_ENV === 'development',
+  },
+
+  // Compression
+  compress: true,
+  poweredByHeader: false,
   
   // Security headers
   async headers() {
@@ -66,36 +96,6 @@ const nextConfig: NextConfig = {
       },
     ]
   },
-  
-  // Image optimization
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'ukshvkdnwjjihinumuuw.supabase.co',
-        pathname: '/storage/v1/object/public/**',
-      },
-    ],
-    formats: ['image/webp', 'image/avif'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    dangerouslyAllowSVG: true,
-    contentDispositionType: 'attachment',
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    minimumCacheTTL: 60,
-    // Bypass private IP check for Supabase
-    unoptimized: process.env.NODE_ENV === 'development',
-  },
-  
-  // Reduce initial page load time
-  typescript: {
-    // ⚠️ Only for development speed - remove in production
-    ignoreBuildErrors: false,
-  },
-  
-  // Performance optimizations
-  compress: true,
-  poweredByHeader: false,
 };
 
 export default nextConfig;

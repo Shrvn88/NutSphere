@@ -75,13 +75,13 @@ export async function createOrder(checkoutData: CheckoutData): Promise<{
     }
   }
   
-  // Calculate totals
+  // Calculate totals (GST is included in product prices)
   const subtotal = cart.subtotal
   const discountAmount = cart.discount
   // COD: ₹49 delivery charge, Online: FREE delivery
   const shippingCost = checkoutData.paymentMethod === 'cod' ? 49 : 0
-  const taxAmount = Math.round(subtotal * 0.18) // 18% GST
-  const totalAmount = subtotal + shippingCost + taxAmount
+  const taxAmount = 0 // GST is included in product prices
+  const totalAmount = subtotal + shippingCost
   
   // Generate order number
   const { data: orderNumberResult } = await adminSupabase
@@ -96,7 +96,7 @@ export async function createOrder(checkoutData: CheckoutData): Promise<{
   
   if (checkoutData.paymentMethod === 'razorpay') {
     const razorpayResult = await createRazorpayOrder(
-      totalAmount,
+      Math.round(totalAmount * 100), // Convert rupees to paisa for Razorpay
       orderNumberResult,
       'INR',
       {
