@@ -5,7 +5,6 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import Link from 'next/link'
 
 export default function SignUpPage() {
   const [email, setEmail] = useState('')
