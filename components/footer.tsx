@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -65,7 +66,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link href="/products?category=nuts" className="text-gray-400 hover:text-green-500 transition-colors text-sm">
-                  🥜 Nuts
+                  🌰 Dry-Fruits & Nuts
                 </Link>
               </li>
               <li>

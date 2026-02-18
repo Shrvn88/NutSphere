@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { User } from '@supabase/supabase-js'
 
 interface MobileMenuProps {
@@ -67,7 +68,7 @@ export default function MobileMenu({ user, isAdmin }: MobileMenuProps) {
                 onClick={() => setIsOpen(false)}
                 className="block px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg font-medium"
               >
-                🥜 Nuts
+                🌰 Dry-Fruits & Nuts
               </Link>
               <Link
                 href="/products?category=seeds"

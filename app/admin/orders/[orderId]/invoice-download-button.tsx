@@ -13,64 +13,32 @@ export default function InvoiceDownloadButton({ orderId, orderNumber }: InvoiceD
   const handleDownload = async () => {
     setIsLoading(true)
     try {
-      // Open invoice in new window which will trigger print dialog
-      const invoiceUrl = `/api/admin/orders/${orderId}/invoice`
-      const newWindow = window.open(invoiceUrl, '_blank', 'width=800,height=600')
-      
-      if (newWindow) {
-        // The invoice page has auto-print functionality
-        // User can save as PDF from print dialog
-      }
-    } catch (error) {
-      console.error('Error opening invoice:', error)
-      alert('Failed to open invoice. Please try again.')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handlePrintPDF = async () => {
-    setIsLoading(true)
-    try {
-      // Fetch the invoice HTML using query parameter
-      const response = await fetch(`/api/admin/orders/${orderId}?format=invoice`)
+      // Use the PDF invoice endpoint with cache busting
+      const timestamp = new Date().getTime()
+      const response = await fetch(`/api/admin/orders/${orderId}/invoice?t=${timestamp}`, {
+        cache: 'no-store'
+      })
       
       if (!response.ok) {
         throw new Error('Failed to fetch invoice')
       }
       
-      const html = await response.text()
+      // Get the PDF blob
+      const blob = await response.blob()
       
-      // Create a hidden iframe for printing
-      const iframe = document.createElement('iframe')
-      iframe.style.position = 'fixed'
-      iframe.style.right = '0'
-      iframe.style.bottom = '0'
-      iframe.style.width = '0'
-      iframe.style.height = '0'
-      iframe.style.border = 'none'
-      document.body.appendChild(iframe)
+      // Create a URL for the blob
+      const url = window.URL.createObjectURL(blob)
       
-      // Write the invoice content to the iframe
-      const iframeDoc = iframe.contentWindow?.document
-      if (iframeDoc) {
-        iframeDoc.open()
-        iframeDoc.write(html)
-        iframeDoc.close()
-        
-        // Wait for content to load then print
-        iframe.onload = () => {
-          setTimeout(() => {
-            iframe.contentWindow?.focus()
-            iframe.contentWindow?.print()
-            
-            // Remove iframe after printing
-            setTimeout(() => {
-              document.body.removeChild(iframe)
-            }, 1000)
-          }, 500)
-        }
-      }
+      // Create a link and trigger download
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `Invoice-${orderNumber}.pdf`
+      document.body.appendChild(link)
+      link.click()
+      
+      // Cleanup
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
     } catch (error) {
       console.error('Error generating PDF:', error)
       alert('Failed to generate invoice. Please try again.')
@@ -81,7 +49,7 @@ export default function InvoiceDownloadButton({ orderId, orderNumber }: InvoiceD
 
   return (
     <button
-      onClick={handlePrintPDF}
+      onClick={handleDownload}
       disabled={isLoading}
       className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
     >

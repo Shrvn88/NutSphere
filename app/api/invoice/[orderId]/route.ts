@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getOrder } from '@/lib/data/orders'
-import { formatPrice } from '@/lib/utils/product'
 import { jsPDF } from 'jspdf'
+
+// Custom price formatter for PDF (jsPDF doesn't handle ₹ well)
+function formatPriceForPDF(price: number): string {
+  return `Rs ${price.toLocaleString('en-IN')}`
+}
 
 interface Props {
   params: Promise<{ orderId: string }>
@@ -21,14 +25,21 @@ export async function GET(request: NextRequest, { params }: Props) {
     
     let yPos = 20
 
-    // Header - Company Info
-    doc.setFontSize(20)
+    // Header - Company Info with branding
+    doc.setFontSize(22)
     doc.setFont('helvetica', 'bold')
+    doc.setTextColor(34, 197, 94) // Green color for NutSphere
     doc.text('NUTSPHERE', 20, yPos)
     
-    doc.setFontSize(10)
+    doc.setFontSize(8)
+    doc.setTextColor(100, 100, 100)
     doc.setFont('helvetica', 'normal')
-    yPos += 10
+    yPos += 6
+    doc.text('THE SPHERE OF SUPERFOODS', 20, yPos)
+    
+    doc.setFontSize(9)
+    doc.setTextColor(60, 60, 60)
+    yPos += 7
     doc.text('H.NO 84, Shivkalyan Nagar Loha', 20, yPos)
     yPos += 5
     doc.text('Dist-Nanded 431708, Maharashtra', 20, yPos)
@@ -36,21 +47,33 @@ export async function GET(request: NextRequest, { params }: Props) {
     doc.text('Email: orders@nutsphere.com', 20, yPos)
     yPos += 5
     doc.text('Phone: +91 87665 00291', 20, yPos)
+    yPos += 5
+    doc.text('FSSAI License: 1121599900840', 20, yPos)
+    
+    doc.setTextColor(0, 0, 0) // Reset to black
 
     // Invoice Title (right side)
-    doc.setFontSize(24)
+    doc.setFontSize(26)
     doc.setFont('helvetica', 'bold')
-    doc.text('TAX INVOICE', 200, 20, { align: 'right' })
+    doc.setTextColor(0, 0, 0)
+    doc.text('TAX INVOICE', 200, 22, { align: 'right' })
     
-    doc.setFontSize(10)
+    doc.setFontSize(9)
     doc.setFont('helvetica', 'normal')
+    doc.setTextColor(60, 60, 60)
     doc.text(`Invoice No: ${order.order_number}`, 200, 35, { align: 'right' })
     doc.text(`Date: ${new Date(order.created_at).toLocaleDateString('en-IN')}`, 200, 40, { align: 'right' })
     doc.text(`Payment: ${order.payment_status.toUpperCase()}`, 200, 45, { align: 'right' })
+    
+    doc.setTextColor(0, 0, 0) // Reset to black
 
     // Line separator
-    yPos = 60
+    yPos = 65
+    doc.setDrawColor(34, 197, 94) // Green line
+    doc.setLineWidth(0.5)
     doc.line(20, yPos, 190, yPos)
+    doc.setDrawColor(0, 0, 0) // Reset to black
+    doc.setLineWidth(0.2)
 
     // Customer Details
     yPos += 10
@@ -93,10 +116,10 @@ export async function GET(request: NextRequest, { params }: Props) {
     yPos += 7
     doc.setFont('helvetica', 'bold')
     doc.text('Item', 20, yPos)
-    doc.text('Qty', 120, yPos)
-    doc.text('Price', 140, yPos)
-    doc.text('Discount', 160, yPos)
-    doc.text('Total', 180, yPos, { align: 'right' })
+    doc.text('Qty', 110, yPos)
+    doc.text('Price', 130, yPos)
+    doc.text('Discount', 155, yPos)
+    doc.text('Total', 190, yPos, { align: 'right' })
     
     yPos += 2
     doc.line(20, yPos, 190, yPos)
@@ -115,10 +138,10 @@ export async function GET(request: NextRequest, { params }: Props) {
         : item.product_name
 
       doc.text(itemName, 20, yPos)
-      doc.text(item.quantity.toString(), 120, yPos)
-      doc.text(formatPrice(item.unit_price), 140, yPos)
-      doc.text(item.discount_percentage > 0 ? `${item.discount_percentage}%` : '-', 160, yPos)
-      doc.text(formatPrice(item.line_total), 180, yPos, { align: 'right' })
+      doc.text(item.quantity.toString(), 110, yPos)
+      doc.text(formatPriceForPDF(item.unit_price), 130, yPos)
+      doc.text(item.discount_percentage > 0 ? `${item.discount_percentage}%` : '-', 155, yPos)
+      doc.text(formatPriceForPDF(item.line_total), 190, yPos, { align: 'right' })
 
       yPos += 10
     }
@@ -129,23 +152,23 @@ export async function GET(request: NextRequest, { params }: Props) {
     yPos += 10
 
     doc.text('Subtotal:', 140, yPos)
-    doc.text(formatPrice(order.subtotal), 180, yPos, { align: 'right' })
+    doc.text(formatPriceForPDF(order.subtotal), 190, yPos, { align: 'right' })
     yPos += 7
 
     if (order.discount_amount > 0) {
       doc.text('Discount:', 140, yPos)
-      doc.text(`-${formatPrice(order.discount_amount)}`, 180, yPos, { align: 'right' })
+      doc.text(`-${formatPriceForPDF(order.discount_amount)}`, 190, yPos, { align: 'right' })
       yPos += 7
     }
 
     doc.text('Shipping:', 140, yPos)
-    doc.text(order.shipping_cost === 0 ? 'FREE' : formatPrice(order.shipping_cost), 180, yPos, { align: 'right' })
+    doc.text(order.shipping_cost === 0 ? 'FREE' : formatPriceForPDF(order.shipping_cost), 190, yPos, { align: 'right' })
     yPos += 7
 
     doc.setFontSize(8)
     doc.setTextColor(0, 128, 0) // Green color
     doc.text('GST:', 140, yPos)
-    doc.text('Included', 180, yPos, { align: 'right' })
+    doc.text('Included', 190, yPos, { align: 'right' })
     doc.setTextColor(0, 0, 0) // Back to black
     doc.setFontSize(10)
     yPos += 10
@@ -156,13 +179,20 @@ export async function GET(request: NextRequest, { params }: Props) {
     doc.setFontSize(12)
     doc.setFont('helvetica', 'bold')
     doc.text('Grand Total:', 140, yPos)
-    doc.text(formatPrice(order.total_amount), 180, yPos, { align: 'right' })
+    doc.text(formatPriceForPDF(order.total_amount), 190, yPos, { align: 'right' })
 
-    // Footer
+    // Footer with branding
     doc.setFontSize(8)
-    doc.setFont('helvetica', 'normal')
+    doc.setFont('helvetica', 'italic')
+    doc.setTextColor(100, 100, 100)
     doc.text('This is a computer-generated invoice and does not require a signature.', 105, 270, { align: 'center' })
-    doc.text('Thank you for your business!', 105, 275, { align: 'center' })
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(34, 197, 94)
+    doc.text('Thank you for choosing NutSphere!', 105, 275, { align: 'center' })
+    doc.setFont('helvetica', 'normal')
+    doc.setTextColor(100, 100, 100)
+    doc.setFontSize(7)
+    doc.text('www.nutsphere.in | Premium Quality Nuts & Seeds', 105, 280, { align: 'center' })
 
     // Generate PDF
     const pdfBuffer = Buffer.from(doc.output('arraybuffer'))

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 
 interface ProductImageGalleryProps {
   images: string[]
@@ -26,7 +27,7 @@ export default function ProductImageGallery({ images, productName, discountPerce
   if (images.length === 0) {
     return (
       <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
-        <span className="text-9xl text-gray-300">🥜</span>
+        <span className="text-9xl text-gray-300">🌰</span>
       </div>
     )
   }

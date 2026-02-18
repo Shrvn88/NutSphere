@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 // Category emoji map
 const categoryEmoji: Record<string, string> = {
-  nuts: '🥜',
+  nuts: '🌰',
   seeds: '🌱',
 }
 

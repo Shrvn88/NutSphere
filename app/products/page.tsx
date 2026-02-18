@@ -2,6 +2,7 @@ import { getProducts } from '@/lib/data/products'
 import ProductCard from '@/components/ProductCard'
 import Pagination from '@/components/Pagination'
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Metadata } from 'next'
 
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ category?: string }> }): Promise<Metadata> {
@@ -9,8 +10,8 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   
   if (category === 'nuts') {
     return {
-      title: 'Premium Nuts - NutSphere',
-      description: 'Shop our premium collection of nuts including almonds, cashews, walnuts, pistachios and more at NutSphere.',
+      title: 'Dry-Fruits & Nuts - NutSphere',
+      description: 'Shop our premium collection of dry-fruits and nuts including almonds, cashews, walnuts, pistachios and more at NutSphere.',
     }
   }
   
@@ -40,10 +41,10 @@ export default async function ProductsPage({ searchParams }: Readonly<Props>) {
   const getPageInfo = () => {
     if (category === 'nuts') {
       return {
-        title: 'Premium',
+        title: 'Dry-Fruits &',
         highlight: 'Nuts',
-        description: 'Handpicked, hygienically packed premium quality nuts',
-        emoji: '🥜'
+        description: 'Handpicked, hygienically packed premium quality dry-fruits and nuts',
+        emoji: '🌰'
       }
     }
     if (category === 'seeds') {
@@ -113,7 +114,7 @@ export default async function ProductsPage({ searchParams }: Readonly<Props>) {
                           : 'text-gray-600 hover:bg-gray-100'
                       }`}
                     >
-                      <span>🥜</span> Nuts
+                      <span>🌰</span> Dry-Fruits & Nuts
                     </Link>
                     <Link
                       href="/products?category=seeds"
@@ -168,7 +169,7 @@ export default async function ProductsPage({ searchParams }: Readonly<Props>) {
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
-                    🥜 Nuts
+                    🌰 Dry-Fruits & Nuts
                   </Link>
                   <Link
                     href="/products?category=seeds"

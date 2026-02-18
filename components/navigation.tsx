@@ -48,18 +48,6 @@ export default async function Navigation() {
               Home
             </Link>
             <Link
-              href="/products?category=nuts"
-              className="text-gray-700 hover:text-green-600 font-medium transition-colors"
-            >
-              Nuts
-            </Link>
-            <Link
-              href="/products?category=seeds"
-              className="text-gray-700 hover:text-green-600 font-medium transition-colors"
-            >
-              Seeds
-            </Link>
-            <Link
               href="/products"
               className="text-gray-700 hover:text-green-600 font-medium transition-colors"
             >

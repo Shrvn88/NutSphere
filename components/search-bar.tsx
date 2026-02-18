@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface SearchSuggestion {
   id: string
@@ -115,7 +116,7 @@ export default function SearchBar() {
                 />
               ) : (
                 <div className="w-12 h-12 bg-gray-100 rounded flex items-center justify-center text-2xl">
-                  🥜
+                  🌰
                 </div>
               )}
               <div className="flex-1 min-w-0">

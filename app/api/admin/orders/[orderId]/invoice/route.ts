@@ -1,6 +1,12 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
+import { jsPDF } from 'jspdf'
+
+// Custom price formatter for PDF (jsPDF doesn't handle ₹ well)
+function formatPriceForPDF(price: number): string {
+  return `Rs ${price.toLocaleString('en-IN')}`
+}
 
 export async function GET(
   request: NextRequest,
@@ -8,8 +14,7 @@ export async function GET(
 ) {
   try {
     const { orderId } = await params
-    const url = new URL(request.url)
-    const download = url.searchParams.get('download') === 'true'
+    console.log('[Admin Invoice] Generating invoice for order:', orderId)
 
     const cookieStore = await cookies()
     const supabase = createServerClient(
@@ -49,44 +54,20 @@ export async function GET(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    // Get order details
+    // Get order details with items
     const { data: order, error: orderError } = await supabase
       .from('orders')
-      .select(
-        `
-        id,
-        order_number,
-        user_id,
-        total_amount,
-        subtotal,
-        shipping_cost,
-        payment_status,
-        payment_method,
-        status,
-        tracking_id,
-        created_at,
-        customer_name,
-        customer_email,
-        customer_phone,
-        shipping_address_line1,
-        shipping_address_line2,
-        shipping_city,
-        shipping_state,
-        shipping_postal_code,
-        shipping_country,
+      .select(`
+        *,
         order_items (
           id,
           quantity,
           unit_price,
-          product_name,
-          products (
-            id,
-            name,
-            sku
-          )
+          line_total,
+          discount_percentage,
+          product_name
         )
-      `
-      )
+      `)
       .eq('id', orderId)
       .single()
 
@@ -94,373 +75,192 @@ export async function GET(
       return NextResponse.json({ error: 'Order not found' }, { status: 404 })
     }
 
-    // Customer info is directly on the order
-    const customer = {
-      full_name: order.customer_name,
-      email: order.customer_email,
-      phone_number: order.customer_phone,
-    }
+    // Create PDF document - EXACT SAME AS CUSTOMER INVOICE
+    const doc = new jsPDF()
+    
+    let yPos = 20
 
-    // Generate Invoice HTML
-    const invoiceDate = new Date(order.created_at).toLocaleDateString('en-IN', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    })
+    // Header - Company Info with branding
+    doc.setFontSize(22)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(34, 197, 94) // Green color for NutSphere
+    doc.text('NUTSPHERE', 20, yPos)
+    
+    doc.setFontSize(8)
+    doc.setTextColor(100, 100, 100)
+    doc.setFont('helvetica', 'normal')
+    yPos += 6
+    doc.text('THE SPHERE OF SUPERFOODS', 20, yPos)
+    
+    doc.setFontSize(9)
+    doc.setTextColor(60, 60, 60)
+    yPos += 7
+    doc.text('H.NO 84, Shivkalyan Nagar Loha', 20, yPos)
+    yPos += 5
+    doc.text('Dist-Nanded 431708, Maharashtra', 20, yPos)
+    yPos += 5
+    doc.text('Email: orders@nutsphere.com', 20, yPos)
+    yPos += 5
+    doc.text('Phone: +91 87665 00291', 20, yPos)
+    yPos += 5
+    doc.text('FSSAI License: 1121599900840', 20, yPos)
+    
+    doc.setTextColor(0, 0, 0) // Reset to black
 
-    // Calculate amounts (already in rupees)
-    const subtotal = order.subtotal || order.order_items?.reduce(
-      (sum: number, item: any) => sum + item.quantity * item.unit_price,
-      0
-    ) || 0
+    // Invoice Title (right side)
+    doc.setFontSize(26)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(0, 0, 0)
+    doc.text('TAX INVOICE', 200, 22, { align: 'right' })
+    
+    doc.setFontSize(9)
+    doc.setFont('helvetica', 'normal')
+    doc.setTextColor(60, 60, 60)
+    doc.text(`Invoice No: ${order.order_number}`, 200, 35, { align: 'right' })
+    doc.text(`Date: ${new Date(order.created_at).toLocaleDateString('en-IN')}`, 200, 40, { align: 'right' })
+    doc.text(`Payment: ${order.payment_status.toUpperCase()}`, 200, 45, { align: 'right' })
+    
+    doc.setTextColor(0, 0, 0) // Reset to black
 
-    const shippingCost = order.shipping_cost || 0
-    const totalAmount = order.total_amount || 0
+    // Line separator
+    yPos = 65
+    doc.setDrawColor(34, 197, 94) // Green line
+    doc.setLineWidth(0.5)
+    doc.line(20, yPos, 190, yPos)
+    doc.setDrawColor(0, 0, 0) // Reset to black
+    doc.setLineWidth(0.2)
 
-    const invoiceHTML = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Invoice - ${order.order_number}</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #fff;
-      padding: 20px;
-    }
-    .invoice-container {
-      max-width: 800px;
-      margin: 0 auto;
-      background: #fff;
-      border: 1px solid #e5e5e5;
-    }
-    .invoice-header {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: white;
-      padding: 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-    .company-info h1 {
-      font-size: 32px;
-      margin-bottom: 8px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-    .company-info p {
-      font-size: 13px;
-      opacity: 0.95;
-      margin: 2px 0;
-    }
-    .invoice-details {
-      text-align: right;
-    }
-    .invoice-details h2 {
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-    .invoice-details p {
-      font-size: 12px;
-      margin: 3px 0;
-    }
-    .invoice-body {
-      padding: 30px;
-    }
-    .address-section {
-      display: flex;
-      gap: 40px;
-      margin-bottom: 30px;
-    }
-    .address-box {
-      flex: 1;
-    }
-    .address-box h3 {
-      font-size: 12px;
-      color: #666;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 10px;
-      padding-bottom: 5px;
-      border-bottom: 2px solid #667eea;
-    }
-    .address-box p {
-      font-size: 13px;
-      margin: 3px 0;
-    }
-    .address-box .name {
-      font-weight: 600;
-      font-size: 14px;
-    }
-    .items-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 30px;
-    }
-    .items-table th {
-      background: #f8f9fa;
-      padding: 12px 15px;
-      text-align: left;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #666;
-      border-bottom: 2px solid #dee2e6;
-    }
-    .items-table td {
-      padding: 15px;
-      border-bottom: 1px solid #e9ecef;
-      font-size: 13px;
-    }
-    .items-table .product-name {
-      font-weight: 500;
-    }
-    .items-table .sku {
-      color: #666;
-      font-size: 11px;
-    }
-    .items-table .text-right {
-      text-align: right;
-    }
-    .items-table .text-center {
-      text-align: center;
-    }
-    .totals-section {
-      display: flex;
-      justify-content: flex-end;
-    }
-    .totals-box {
-      width: 300px;
-    }
-    .total-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      font-size: 13px;
-    }
-    .total-row.subtotal {
-      border-bottom: 1px solid #e9ecef;
-    }
-    .total-row.grand-total {
-      border-top: 2px solid #333;
-      font-size: 16px;
-      font-weight: 700;
-      padding-top: 15px;
-      margin-top: 5px;
-    }
-    .payment-info {
-      margin-top: 30px;
-      padding: 20px;
-      background: #f8f9fa;
-      border-radius: 8px;
-      display: flex;
-      gap: 40px;
-    }
-    .payment-info-item {
-      flex: 1;
-    }
-    .payment-info-item h4 {
-      font-size: 11px;
-      text-transform: uppercase;
-      color: #666;
-      margin-bottom: 5px;
-    }
-    .payment-info-item p {
-      font-size: 14px;
-      font-weight: 500;
-    }
-    .status-badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-    .status-paid {
-      background: #d4edda;
-      color: #155724;
-    }
-    .status-pending {
-      background: #fff3cd;
-      color: #856404;
-    }
-    .status-failed {
-      background: #f8d7da;
-      color: #721c24;
-    }
-    .invoice-footer {
-      background: #f8f9fa;
-      padding: 20px 30px;
-      text-align: center;
-      border-top: 1px solid #e9ecef;
-    }
-    .invoice-footer p {
-      font-size: 12px;
-      color: #666;
-      margin: 5px 0;
-    }
-    @media print {
-      body { padding: 0; }
-      .invoice-container { border: none; }
-      .no-print { display: none; }
-    }
-  </style>
-</head>
-<body>
-  <div class="invoice-container">
-    <div class="invoice-header">
-      <div class="company-info">
-        <h1>NutSphere</h1>
-        <p>Premium Nuts & Seeds Store</p>
-        <p>H.NO 84, Shivkalyan Nagar Loha, Dist-Nanded 431708</p>
-        <p>Phone: +91 87665 00291 | Email: Hello@nutsphere.com</p>
-      </div>
-      <div class="invoice-details">
-        <h2>INVOICE</h2>
-        <p><strong>Invoice No:</strong> ${order.order_number}</p>
-        <p><strong>Date:</strong> ${invoiceDate}</p>
-        <p><strong>Order ID:</strong> ${order.id.slice(0, 8).toUpperCase()}</p>
-      </div>
-    </div>
+    // Customer Details
+    yPos += 10
+    doc.setFontSize(12)
+    doc.setFont('helvetica', 'bold')
+    doc.text('BILL TO:', 20, yPos)
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    yPos += 7
+    doc.text(order.customer_name, 20, yPos)
+    yPos += 5
+    doc.text(order.customer_email, 20, yPos)
+    yPos += 5
+    doc.text(order.customer_phone, 20, yPos)
 
-    <div class="invoice-body">
-      <div class="address-section">
-        <div class="address-box">
-          <h3>Bill To</h3>
-          <p class="name">${order.customer_name || customer?.full_name || 'Customer'}</p>
-          <p>${order.shipping_address_line1 || ''}</p>
-          ${order.shipping_address_line2 ? `<p>${order.shipping_address_line2}</p>` : ''}
-          <p>${order.shipping_city || ''}, ${order.shipping_state || ''} ${order.shipping_postal_code || ''}</p>
-          <p>${order.shipping_country || 'India'}</p>
-          <p>Phone: ${order.customer_phone || ''}</p>
-          <p>Email: ${order.customer_email || ''}</p>
-        </div>
-        <div class="address-box">
-          <h3>Ship To</h3>
-          <p class="name">${order.customer_name || customer?.full_name || 'Customer'}</p>
-          <p>${order.shipping_address_line1 || ''}</p>
-          ${order.shipping_address_line2 ? `<p>${order.shipping_address_line2}</p>` : ''}
-          <p>${order.shipping_city || ''}, ${order.shipping_state || ''} ${order.shipping_postal_code || ''}</p>
-          <p>${order.shipping_country || 'India'}</p>
-          <p>Phone: ${order.customer_phone || ''}</p>
-        </div>
-      </div>
+    // Shipping Address (right side)
+    doc.setFontSize(12)
+    doc.setFont('helvetica', 'bold')
+    doc.text('SHIP TO:', 120, 70)
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    let shipY = 77
+    doc.text(order.customer_name, 120, shipY)
+    shipY += 5
+    doc.text(order.shipping_address_line1, 120, shipY)
+    shipY += 5
+    if (order.shipping_address_line2) {
+      doc.text(order.shipping_address_line2, 120, shipY)
+      shipY += 5
+    }
+    doc.text(`${order.shipping_city}, ${order.shipping_state} ${order.shipping_postal_code}`, 120, shipY)
+    shipY += 5
+    doc.text(order.shipping_country, 120, shipY)
 
-      <table class="items-table">
-        <thead>
-          <tr>
-            <th style="width: 50%">Product</th>
-            <th class="text-center" style="width: 15%">Quantity</th>
-            <th class="text-right" style="width: 17.5%">Unit Price</th>
-            <th class="text-right" style="width: 17.5%">Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${order.order_items?.map((item: any) => `
-            <tr>
-              <td>
-                <div class="product-name">${item.products?.name || item.product_name || 'Product'}</div>
-                ${item.products?.sku ? `<div class="sku">SKU: ${item.products.sku}</div>` : ''}
-              </td>
-              <td class="text-center">${item.quantity}</td>
-              <td class="text-right">₹${item.unit_price.toFixed(2)}</td>
-              <td class="text-right">₹${(item.quantity * item.unit_price).toFixed(2)}</td>
-            </tr>
-          `).join('') || ''}
-        </tbody>
-      </table>
+    // Table Header
+    yPos = 110
+    doc.line(20, yPos, 190, yPos)
+    yPos += 7
+    doc.setFont('helvetica', 'bold')
+    doc.text('Item', 20, yPos)
+    doc.text('Qty', 110, yPos)
+    doc.text('Price', 130, yPos)
+    doc.text('Discount', 155, yPos)
+    doc.text('Total', 190, yPos, { align: 'right' })
+    
+    yPos += 2
+    doc.line(20, yPos, 190, yPos)
 
-      <div class="totals-section">
-        <div class="totals-box">
-          <div class="total-row subtotal">
-            <span>Subtotal</span>
-            <span>₹${subtotal.toFixed(2)}</span>
-          </div>
-          <div class="total-row">
-            <span>Shipping</span>
-            <span>${shippingCost === 0 ? 'FREE' : '₹' + shippingCost.toFixed(2)}</span>
-          </div>
-          <div class="total-row" style="color: #10b981;">
-            <span>GST</span>
-            <span>Included</span>
-          </div>
-          <div class="total-row grand-total">
-            <span>Grand Total</span>
-            <span>₹${totalAmount.toFixed(2)}</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="payment-info">
-        <div class="payment-info-item">
-          <h4>Payment Method</h4>
-          <p>${order.payment_method === 'cod' ? 'Cash on Delivery' : order.payment_method === 'razorpay' ? 'Online Payment' : order.payment_method || 'N/A'}</p>
-        </div>
-        <div class="payment-info-item">
-          <h4>Payment Status</h4>
-          <span class="status-badge status-${order.payment_status}">
-            ${order.payment_status?.charAt(0).toUpperCase() + order.payment_status?.slice(1)}
-          </span>
-        </div>
-        <div class="payment-info-item">
-          <h4>Order Status</h4>
-          <p>${order.status?.charAt(0).toUpperCase() + order.status?.slice(1)}</p>
-        </div>
-        ${order.tracking_id ? `
-          <div class="payment-info-item">
-            <h4>Tracking ID</h4>
-            <p>${order.tracking_id}</p>
-          </div>
-        ` : ''}
-      </div>
-    </div>
-
-    <div class="invoice-footer">
-      <p><strong>Thank you for your business!</strong></p>
-      <p>This is a computer-generated invoice and does not require a signature.</p>
-      <p>For any queries, please contact support@ecommerce-store.com</p>
-    </div>
-  </div>
-
-  <script>
-    // Auto print when opened in new tab
-    if (typeof window !== 'undefined') {
-      // Set the document title for PDF filename
-      document.title = 'Invoice-${order.order_number}';
-      window.onload = function() {
-        // Give a moment for styles to load
-        setTimeout(function() {
-          window.print();
-        }, 500);
+    // Table Items
+    doc.setFont('helvetica', 'normal')
+    yPos += 7
+    for (const item of order.order_items) {
+      if (yPos > 250) {
+        doc.addPage()
+        yPos = 20
       }
+
+      const itemName = item.product_name.length > 40 
+        ? item.product_name.substring(0, 37) + '...'
+        : item.product_name
+
+      doc.text(itemName, 20, yPos)
+      doc.text(item.quantity.toString(), 110, yPos)
+      doc.text(formatPriceForPDF(item.unit_price), 130, yPos)
+      doc.text(item.discount_percentage > 0 ? `${item.discount_percentage}%` : '-', 155, yPos)
+      doc.text(formatPriceForPDF(item.line_total), 190, yPos, { align: 'right' })
+
+      yPos += 10
     }
-  </script>
-</body>
-</html>
-    `
 
-    const filename = `Invoice-${order.order_number}.html`
+    // Summary section
+    yPos += 5
+    doc.line(20, yPos, 190, yPos)
+    yPos += 10
 
-    return new NextResponse(invoiceHTML, {
+    doc.text('Subtotal:', 140, yPos)
+    doc.text(formatPriceForPDF(order.subtotal), 190, yPos, { align: 'right' })
+    yPos += 7
+
+    if (order.discount_amount > 0) {
+      doc.text('Discount:', 140, yPos)
+      doc.text(`-${formatPriceForPDF(order.discount_amount)}`, 190, yPos, { align: 'right' })
+      yPos += 7
+    }
+
+    doc.text('Shipping:', 140, yPos)
+    doc.text(order.shipping_cost === 0 ? 'FREE' : formatPriceForPDF(order.shipping_cost), 190, yPos, { align: 'right' })
+    yPos += 7
+
+    doc.setFontSize(8)
+    doc.setTextColor(0, 128, 0) // Green color
+    doc.text('GST:', 140, yPos)
+    doc.text('Included', 190, yPos, { align: 'right' })
+    doc.setTextColor(0, 0, 0) // Back to black
+    doc.setFontSize(10)
+    yPos += 10
+
+    doc.line(140, yPos, 190, yPos)
+    yPos += 7
+
+    doc.setFontSize(12)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Grand Total:', 140, yPos)
+    doc.text(formatPriceForPDF(order.total_amount), 190, yPos, { align: 'right' })
+
+    // Footer with branding
+    doc.setFontSize(8)
+    doc.setFont('helvetica', 'italic')
+    doc.setTextColor(100, 100, 100)
+    doc.text('This is a computer-generated invoice and does not require a signature.', 105, 270, { align: 'center' })
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(34, 197, 94)
+    doc.text('Thank you for choosing NutSphere!', 105, 275, { align: 'center' })
+    doc.setFont('helvetica', 'normal')
+    doc.setTextColor(100, 100, 100)
+    doc.setFontSize(7)
+    doc.text('www.nutsphere.in | Premium Quality Nuts & Seeds', 105, 280, { align: 'center' })
+
+    // Generate PDF
+    const pdfBuffer = Buffer.from(doc.output('arraybuffer'))
+
+    // Return PDF as response
+    return new NextResponse(pdfBuffer, {
       headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Content-Disposition': download ? `attachment; filename="${filename}"` : 'inline',
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="Invoice-${order.order_number}.pdf"`,
       },
     })
   } catch (error) {
     console.error('Error generating invoice:', error)
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Internal server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to generate invoice' }, { status: 500 })
   }
 }

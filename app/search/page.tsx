@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { searchProducts, getFilterOptions, type SortOption } from '@/lib/data/search'
 import { toProductDisplay, formatPrice } from '@/lib/utils/product'
 import type { Metadata } from 'next'
@@ -221,7 +222,7 @@ async function SearchResults({ searchParams }: SearchPageProps) {
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
-                            <span className="text-6xl text-gray-300">🥜</span>
+                            <span className="text-6xl text-gray-300">🌰</span>
                           </div>
                         )}
                         {product.discount_percentage > 0 && (

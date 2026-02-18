@@ -1,4 +1,5 @@
 ﻿import Link from 'next/link'
+import Image from 'next/image'
 import { getProducts } from '@/lib/data/products'
 import { getCategories } from '@/lib/data/categories'
 import ProductCard from '@/components/ProductCard'
@@ -89,9 +90,9 @@ export default async function HomePage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white rounded-2xl p-4 shadow-lg">
                     <div className="w-full h-32 bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl flex items-center justify-center text-6xl">
-                      🥜
+                      🌰
                     </div>
-                    <p className="mt-3 text-center font-medium text-gray-800">Premium Nuts</p>
+                    <p className="mt-3 text-center font-medium text-gray-800">Dry-Fruits & Nuts</p>
                   </div>
                   <div className="bg-white rounded-2xl p-4 shadow-lg mt-8">
                     <div className="w-full h-32 bg-gradient-to-br from-green-50 to-green-100 rounded-xl flex items-center justify-center text-6xl">
@@ -127,9 +128,9 @@ export default async function HomePage() {
               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-200/50 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
               <div className="relative">
                 <div className="w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center text-5xl mb-6">
-                  🥜
+                  🌰
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Premium Nuts</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Dry-Fruits & Nuts</h3>
                 <p className="text-gray-600 mb-4">
                   Almonds, Cashews, Walnuts, Pistachios and more premium quality nuts
                 </p>

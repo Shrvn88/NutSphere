@@ -59,7 +59,8 @@ export default function ContactPage() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
             {/* Contact Info */}
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Contact Information</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">NUTSPHERE AGROCOMM</h2>
+              <p className="text-sm text-gray-500 mb-6">Contact Information</p>
               <p className="text-gray-600 mb-8">
                 Feel free to reach out to us through any of the following channels. 
                 We typically respond within 24 hours.

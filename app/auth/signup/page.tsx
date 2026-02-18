@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export default function SignUpPage() {
   const [email, setEmail] = useState('')
@@ -58,8 +60,13 @@ export default function SignUpPage() {
         {/* Logo & Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
-            <h1 className="text-3xl font-bold text-green-600">NutSphere</h1>
-            <p className="text-xs text-gray-500 tracking-widest">THE SPHERE OF SUPERFOODS</p>
+            <Image 
+              src="/nutsphere-logo.png" 
+              alt="NutSphere - The Sphere of Superfoods" 
+              width={250} 
+              height={100}
+              className="h-20 w-auto mx-auto"
+            />
           </Link>
         </div>
 
