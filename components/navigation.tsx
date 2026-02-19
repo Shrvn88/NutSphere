@@ -31,9 +31,9 @@ export default async function Navigation() {
             <Image
               src="/logowithoutbg.png"
               alt="NutSphere - The Sphere of Superfoods"
-              width={240}
-              height={72}
-              className="w-auto h-14 sm:h-16 lg:h-20"
+              width={280}
+              height={84}
+              className="w-auto h-16 sm:h-18 lg:h-24"
               priority
             />
           </Link>
