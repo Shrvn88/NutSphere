@@ -44,7 +44,7 @@ export default async function ProductsPage({ searchParams }: Readonly<Props>) {
         title: 'Dry-Fruits &',
         highlight: 'Nuts',
         description: 'Handpicked, hygienically packed premium quality dry-fruits and nuts',
-        emoji: '🌰'
+        emoji: 'cashew'
       }
     }
     if (category === 'seeds') {
@@ -114,7 +114,7 @@ export default async function ProductsPage({ searchParams }: Readonly<Props>) {
                           : 'text-gray-600 hover:bg-gray-100'
                       }`}
                     >
-                      <span>🌰</span> Dry-Fruits & Nuts
+                      <Image src="/nuts.svg" alt="Nut" width={20} height={20} className="inline-block mr-2" /> Dry-Fruits & Nuts
                     </Link>
                     <Link
                       href="/products?category=seeds"
@@ -169,7 +169,7 @@ export default async function ProductsPage({ searchParams }: Readonly<Props>) {
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
-                    🌰 Dry-Fruits & Nuts
+                    <Image src="/nuts.svg" alt="Nut" width={20} height={20} className="inline-block mr-2" /> Dry-Fruits & Nuts
                   </Link>
                   <Link
                     href="/products?category=seeds"

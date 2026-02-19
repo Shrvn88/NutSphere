@@ -222,7 +222,7 @@ async function SearchResults({ searchParams }: SearchPageProps) {
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
-                            <span className="text-6xl text-gray-300">🌰</span>
+                            <Image src="/nuts.svg" alt="Nut" width={96} height={96} className="opacity-30" />
                           </div>
                         )}
                         {product.discount_percentage > 0 && (

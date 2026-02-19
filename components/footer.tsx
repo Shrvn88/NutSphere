@@ -8,7 +8,7 @@ export default function Footer() {
     <footer className="bg-gray-900 text-gray-300">
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Section */}
           <div className="lg:col-span-1">
             <div className="flex flex-col">
@@ -60,13 +60,35 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Policies */}
+          <div>
+            <h3 className="text-white font-semibold mb-4">Policies</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link href="/privacy-policy" className="text-gray-400 hover:text-green-500 transition-colors text-sm">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms-of-service" className="text-gray-400 hover:text-green-500 transition-colors text-sm">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/shipping-policy" className="text-gray-400 hover:text-green-500 transition-colors text-sm">
+                  Shipping Policy
+                </Link>
+              </li>
+            </ul>
+          </div>
+
           {/* Categories */}
           <div>
             <h3 className="text-white font-semibold mb-4">Categories</h3>
             <ul className="space-y-3">
               <li>
                 <Link href="/products?category=nuts" className="text-gray-400 hover:text-green-500 transition-colors text-sm">
-                  🌰 Dry-Fruits & Nuts
+                  <Image src="/nuts.svg" alt="Nut" width={16} height={16} className="inline-block mr-1" /> Dry-Fruits & Nuts
                 </Link>
               </li>
               <li>
@@ -125,13 +147,13 @@ export default function Footer() {
               © {currentYear} NutSphere Agrocomm. All rights reserved.
             </p>
             <div className="flex items-center gap-6">
-              <Link href="/privacy" className="text-sm text-gray-500 hover:text-green-500">
+              <Link href="/privacy-policy" className="text-sm text-gray-500 hover:text-green-500">
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="text-sm text-gray-500 hover:text-green-500">
+              <Link href="/terms-of-service" className="text-sm text-gray-500 hover:text-green-500">
                 Terms of Service
               </Link>
-              <Link href="/shipping" className="text-sm text-gray-500 hover:text-green-500">
+              <Link href="/shipping-policy" className="text-sm text-gray-500 hover:text-green-500">
                 Shipping Policy
               </Link>
             </div>

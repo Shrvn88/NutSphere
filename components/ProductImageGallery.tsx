@@ -27,7 +27,7 @@ export default function ProductImageGallery({ images, productName, discountPerce
   if (images.length === 0) {
     return (
       <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
-        <span className="text-9xl text-gray-300">🌰</span>
+        <Image src="/nuts.svg" alt="Nut" width={144} height={144} className="opacity-30" />
       </div>
     )
   }

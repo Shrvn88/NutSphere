@@ -68,7 +68,7 @@ export default function MobileMenu({ user, isAdmin }: MobileMenuProps) {
                 onClick={() => setIsOpen(false)}
                 className="block px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg font-medium"
               >
-                🌰 Dry-Fruits & Nuts
+                <Image src="/nuts.svg" alt="Nut" width={20} height={20} className="inline-block mr-2" /> Dry-Fruits & Nuts
               </Link>
               <Link
                 href="/products?category=seeds"

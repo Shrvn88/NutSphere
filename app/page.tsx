@@ -89,14 +89,16 @@ export default async function HomePage() {
               <div className="relative bg-gradient-to-br from-green-100 to-green-50 rounded-3xl p-8 shadow-2xl">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white rounded-2xl p-4 shadow-lg">
-                    <div className="w-full h-32 bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl flex items-center justify-center text-6xl">
-                      🌰
+                    <div className="w-full h-32 bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl flex items-center justify-center">
+                      <Image src="/nuts.svg" alt="Nut" width={96} height={96} />
                     </div>
                     <p className="mt-3 text-center font-medium text-gray-800">Dry-Fruits & Nuts</p>
                   </div>
                   <div className="bg-white rounded-2xl p-4 shadow-lg mt-8">
-                    <div className="w-full h-32 bg-gradient-to-br from-green-50 to-green-100 rounded-xl flex items-center justify-center text-6xl">
-                      🌱
+                    <div className="w-full h-32 bg-gradient-to-br from-green-50 to-green-100 rounded-xl flex items-center justify-center">
+                      <svg className="w-16 h-16 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                      </svg>
                     </div>
                     <p className="mt-3 text-center font-medium text-gray-800">Fresh Seeds</p>
                   </div>
@@ -127,8 +129,8 @@ export default async function HomePage() {
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-200/50 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
               <div className="relative">
-                <div className="w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center text-5xl mb-6">
-                  🌰
+                <div className="w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center mb-6">
+                  <Image src="/nuts.svg" alt="Nut" width={80} height={80} />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Dry-Fruits & Nuts</h3>
                 <p className="text-gray-600 mb-4">
@@ -150,8 +152,10 @@ export default async function HomePage() {
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-green-200/50 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
               <div className="relative">
-                <div className="w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center text-5xl mb-6">
-                  🌱
+                <div className="w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center mb-6">
+                  <svg className="w-12 h-12 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                  </svg>
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Super Seeds</h3>
                 <p className="text-gray-600 mb-4">

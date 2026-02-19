@@ -13,9 +13,9 @@ export const metadata: Metadata = {
   },
 }
 
-// Category emoji map
+// Category emoji map - using cashew icon for nuts
 const categoryEmoji: Record<string, string> = {
-  nuts: '🌰',
+  nuts: 'cashew',
   seeds: '🌱',
 }
 

@@ -32,7 +32,7 @@ export default function ProductCard({ product }: Readonly<ProductCardProps>) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <span className="text-6xl opacity-50">🌰</span>
+            <Image src="/nuts.svg" alt="Nut" width={96} height={96} className="opacity-50" />
           </div>
         )}
         

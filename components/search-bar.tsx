@@ -115,8 +115,8 @@ export default function SearchBar() {
                   className="w-12 h-12 object-cover rounded"
                 />
               ) : (
-                <div className="w-12 h-12 bg-gray-100 rounded flex items-center justify-center text-2xl">
-                  🌰
+                <div className="w-12 h-12 bg-gray-100 rounded flex items-center justify-center">
+                  <Image src="/nuts.svg" alt="Nut" width={32} height={32} />
                 </div>
               )}
               <div className="flex-1 min-w-0">

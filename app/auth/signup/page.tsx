@@ -60,11 +60,11 @@ export default function SignUpPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
             <Image 
-              src="/nutsphere-logo.png" 
+              src="/logo.svg" 
               alt="NutSphere - The Sphere of Superfoods" 
-              width={250} 
-              height={100}
-              className="h-20 w-auto mx-auto"
+              width={320} 
+              height={110}
+              className="h-24 w-auto mx-auto"
             />
           </Link>
         </div>

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import SearchBar from './search-bar'
 import CartIcon from './cart-icon'
 import UserMenu from './user-menu'
@@ -21,26 +22,24 @@ export default async function Navigation() {
       .single()
     profile = data
   }
-  
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center h-16 lg:h-20">
+      <div className="w-full px-2 sm:px-4 lg:px-8">
+        <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo - Leftmost */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0 mr-8">
-            <div className="flex flex-col">
-              <span className="text-2xl lg:text-3xl font-bold">
-                <span className="text-gray-800">Nut</span>
-                <span className="text-gray-600">Sphere</span>
-              </span>
-              <span className="text-[10px] lg:text-xs text-green-600 font-medium tracking-wider -mt-1">
-                THE SPHERE OF SUPERFOODS
-              </span>
-            </div>
+          <Link href="/" className="flex items-center flex-shrink-0">
+            <Image
+              src="/logo.svg"
+              alt="NutSphere - The Sphere of Superfoods"
+              width={300}
+              height={100}
+              className="object-contain h-12 sm:h-14 lg:h-20 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-8 ml-8">
             <Link
               href="/"
               className="text-gray-700 hover:text-green-600 font-medium transition-colors"
@@ -73,7 +72,7 @@ export default async function Navigation() {
           </div>
 
           {/* Right Section */}
-          <div className="flex items-center gap-4 ml-auto">
+          <div className="flex items-center gap-2 sm:gap-4">
             <CartIcon itemCount={cart.itemCount} />
             
             {user ? (
@@ -103,7 +102,7 @@ export default async function Navigation() {
         </div>
 
         {/* Search Bar (Mobile) */}
-        <div className="md:hidden pb-4">
+        <div className="md:hidden pb-3 px-2 sm:px-4">
           <SearchBar />
         </div>
       </div>
