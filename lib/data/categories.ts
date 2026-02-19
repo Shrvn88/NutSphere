@@ -6,26 +6,36 @@ import { cache } from 'react'
  * Get all active categories with product count
  */
 export const getCategories = cache(async (): Promise<CategoryWithProductCount[]> => {
-  const supabase = await createClient()
+  try {
+    const supabase = await createClient()
 
-  const { data, error } = await supabase
-    .from('categories')
-    .select(`
-      *,
-      products:products(count)
-    `)
-    .eq('is_active', true)
-    .order('display_order', { ascending: true })
+    const { data, error } = await supabase
+      .from('categories')
+      .select(`
+        *,
+        products:products(count)
+      `)
+      .eq('is_active', true)
+      .order('display_order', { ascending: true })
 
-  if (error) {
-    console.error('Error fetching categories:', error)
+    if (error) {
+      console.error('Error fetching categories:', error.message, error.details)
+      return []
+    }
+
+    if (!data) {
+      console.warn('No categories data returned')
+      return []
+    }
+
+    return data.map((category: any) => ({
+      ...category,
+      product_count: category.products[0]?.count || 0,
+    }))
+  } catch (err) {
+    console.error('Unexpected error fetching categories:', err)
     return []
   }
-
-  return data.map((category: any) => ({
-    ...category,
-    product_count: category.products[0]?.count || 0,
-  }))
 })
 
 /**

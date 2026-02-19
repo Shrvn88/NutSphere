@@ -29,11 +29,11 @@ export default async function Navigation() {
           {/* Logo - Leftmost */}
           <Link href="/" className="flex items-center flex-shrink-0">
             <Image
-              src="/logo.svg"
+              src="/logowithoutbg.png"
               alt="NutSphere - The Sphere of Superfoods"
-              width={300}
-              height={100}
-              className="object-contain h-12 sm:h-14 lg:h-20 w-auto"
+              width={200}
+              height={60}
+              className="w-auto max-h-12 sm:max-h-14 lg:max-h-16"
               priority
             />
           </Link>

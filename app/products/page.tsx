@@ -44,7 +44,7 @@ export default async function ProductsPage({ searchParams }: Readonly<Props>) {
         title: 'Dry-Fruits &',
         highlight: 'Nuts',
         description: 'Handpicked, hygienically packed premium quality dry-fruits and nuts',
-        emoji: 'cashew'
+        emoji: 'nuts-svg'
       }
     }
     if (category === 'seeds') {
@@ -71,7 +71,13 @@ export default async function ProductsPage({ searchParams }: Readonly<Props>) {
       <section className="relative bg-gradient-to-br from-green-50 via-white to-green-50 py-12 lg:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
-            <div className="text-4xl mb-4">{pageInfo.emoji}</div>
+            <div className="flex justify-center mb-4">
+              {pageInfo.emoji === 'nuts-svg' ? (
+                <Image src="/nuts.svg" alt="Nuts" width={64} height={64} />
+              ) : (
+                <div className="text-4xl">{pageInfo.emoji}</div>
+              )}
+            </div>
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
               {pageInfo.title} <span className="text-green-600">{pageInfo.highlight}</span>
             </h1>

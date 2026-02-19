@@ -10,17 +10,18 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Section */}
-          <div className="lg:col-span-1">
-            <div className="flex flex-col">
-              <span className="text-2xl font-bold">
-                <span className="text-white">Nut</span>
-                <span className="text-gray-400">Sphere</span>
-              </span>
-              <span className="text-xs text-green-500 font-medium tracking-wider mt-1">
-                THE SPHERE OF SUPERFOODS
-              </span>
-            </div>
-            <p className="mt-4 text-sm text-gray-400 leading-relaxed">
+          <div className="lg:col-span-1 -mt-4">
+            <Link href="/" className="inline-block">
+              <Image
+                src="/logowithoutbg.png"
+                alt="NutSphere - The Sphere of Superfoods"
+                width={160}
+                height={50}
+                className="w-auto max-h-12"
+                style={{ filter: 'brightness(0) saturate(100%) invert(100%)' }}
+              />
+            </Link>
+            <p className="text-sm text-gray-400 leading-relaxed">
               Premium quality dry fruits, nuts, and seeds. Hygienically packed and delivered fresh to your doorstep.
             </p>
             <div className="mt-4 flex items-center gap-2">
