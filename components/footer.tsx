@@ -17,8 +17,7 @@ export default function Footer() {
                 alt="NutSphere - The Sphere of Superfoods"
                 width={160}
                 height={50}
-                className="w-auto max-h-12"
-                style={{ filter: 'brightness(0) saturate(100%) invert(100%)' }}
+                className="w-auto h-12"
               />
             </Link>
             <p className="text-sm text-gray-400 leading-relaxed">

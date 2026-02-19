@@ -33,7 +33,7 @@ export default async function Navigation() {
               alt="NutSphere - The Sphere of Superfoods"
               width={200}
               height={60}
-              className="w-auto max-h-12 sm:max-h-14 lg:max-h-16"
+              className="w-auto h-12 sm:h-14 lg:h-16"
               priority
             />
           </Link>
