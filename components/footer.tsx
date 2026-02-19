@@ -15,9 +15,10 @@ export default function Footer() {
               <Image
                 src="/logowithoutbg.png"
                 alt="NutSphere - The Sphere of Superfoods"
-                width={160}
-                height={50}
-                className="w-auto h-12"
+                width={200}
+                height={60}
+                className="w-auto h-16"
+                style={{ filter: 'brightness(0) saturate(100%) invert(100%)' }}
               />
             </Link>
             <p className="text-sm text-gray-400 leading-relaxed">
