@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import Image from 'next/image'
 import { getProducts } from '@/lib/data/products'
 import { getCategories } from '@/lib/data/categories'
@@ -296,7 +296,7 @@ export default async function HomePage() {
                 Trusted by Health-Conscious Families
               </h2>
               <p className="text-green-100 text-lg leading-relaxed mb-8">
-                NutSphere Agrocomm is built on a simple idea — to deliver pure, hygienically picked, 
+                NutSphere Agrocomm is built on a simple idea - to deliver pure, hygienically picked, 
                 and naturally sourced dry fruits, seeds, and superfoods to every home in India.
               </p>
               
@@ -331,7 +331,7 @@ export default async function HomePage() {
             <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8">
               <div className="text-center mb-6">
                 <p className="text-green-200 text-sm font-medium">FSSAI License Number</p>
-                <p className="text-3xl font-bold font-mono mt-2">1121599900840</p>
+                <p className="text-3xl font-bold font-mono mt-2">11525048000250</p>
               </div>
               <div className="border-t border-white/20 pt-6">
                 <p className="text-center text-green-100 text-sm">
@@ -371,3 +371,4 @@ export default async function HomePage() {
     </div>
   )
 }
+

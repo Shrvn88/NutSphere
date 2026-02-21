@@ -52,3 +52,4 @@ export default async function CheckoutPage() {
     </div>
   )
 }
+

@@ -220,3 +220,4 @@ export const getFilterOptions = cache(async (
     categories: categories || [],
   }
 })
+

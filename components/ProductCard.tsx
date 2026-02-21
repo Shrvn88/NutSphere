@@ -110,3 +110,4 @@ export default function ProductCard({ product }: Readonly<ProductCardProps>) {
     </Link>
   )
 }
+

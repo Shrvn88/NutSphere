@@ -168,3 +168,4 @@ export const getFeaturedProducts = cache(async (limit: number = 8): Promise<Prod
     categories: product.categories,
   }))
 })
+

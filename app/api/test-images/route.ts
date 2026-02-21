@@ -16,3 +16,4 @@ export async function GET() {
     count: data?.length || 0
   })
 }
+

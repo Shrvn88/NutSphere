@@ -81,3 +81,4 @@ export function getStockStatusColor(stockQuantity: number): 'red' | 'yellow' | '
   if (stockQuantity < 10) return 'yellow'
   return 'green'
 }
+

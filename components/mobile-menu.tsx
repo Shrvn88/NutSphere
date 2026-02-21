@@ -160,3 +160,4 @@ export default function MobileMenu({ user, isAdmin }: MobileMenuProps) {
     </div>
   )
 }
+

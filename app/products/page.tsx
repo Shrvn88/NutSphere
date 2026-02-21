@@ -145,7 +145,7 @@ export default async function ProductsPage({ searchParams }: Readonly<Props>) {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-gray-900">FSSAI Certified</p>
-                      <p className="text-xs text-gray-600">License: 1121599900840</p>
+                      <p className="text-xs text-gray-600">License: 11525048000250</p>
                     </div>
                   </div>
                 </div>
@@ -257,3 +257,4 @@ export default async function ProductsPage({ searchParams }: Readonly<Props>) {
     </div>
   )
 }
+

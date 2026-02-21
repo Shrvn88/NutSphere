@@ -105,3 +105,4 @@ export default function Pagination({ currentPage, totalPages, baseUrl }: Readonl
     </nav>
   )
 }
+

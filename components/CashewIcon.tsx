@@ -63,3 +63,4 @@ export default function CashewIcon({ className = '', size = 24 }: CashewIconProp
     </svg>
   )
 }
+

@@ -8,3 +8,4 @@ export async function POST() {
     status: 302,
   })
 }
+

@@ -191,7 +191,7 @@ export default function AboutPage() {
                 </p>
                 <div className="flex items-center gap-4">
                   <div className="text-sm text-gray-500">License Number:</div>
-                  <div className="text-xl font-bold font-mono text-green-600">1121599900840</div>
+                  <div className="text-xl font-bold font-mono text-green-600">11525048000250</div>
                 </div>
               </div>
               <div className="flex justify-center">
@@ -238,3 +238,4 @@ export default function AboutPage() {
     </div>
   )
 }
+

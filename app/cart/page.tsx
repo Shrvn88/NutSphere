@@ -91,3 +91,4 @@ export default async function CartPage() {
     </div>
   )
 }
+

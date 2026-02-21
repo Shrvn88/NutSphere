@@ -141,3 +141,4 @@ export default function CartItem({ item }: Readonly<CartItemProps>) {
     </div>
   )
 }
+

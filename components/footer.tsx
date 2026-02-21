@@ -134,7 +134,7 @@ export default function Footer() {
             {/* FSSAI License */}
             <div className="mt-6 p-3 bg-gray-800 rounded-lg">
               <p className="text-xs text-gray-500">FSSAI License No.</p>
-              <p className="text-sm text-white font-mono">1121599900840</p>
+              <p className="text-sm text-white font-mono">11525048000250</p>
             </div>
           </div>
         </div>
@@ -287,3 +287,4 @@ export default function Footer() {
     </footer>
   )
 }
+

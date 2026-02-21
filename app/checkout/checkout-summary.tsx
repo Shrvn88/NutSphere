@@ -94,3 +94,4 @@ export default function CheckoutSummary({ items, subtotal, discount, paymentMeth
     </div>
   )
 }
+

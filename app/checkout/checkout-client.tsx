@@ -39,3 +39,4 @@ export default function CheckoutClient({ user, savedAddresses, items, subtotal, 
     </div>
   )
 }
+

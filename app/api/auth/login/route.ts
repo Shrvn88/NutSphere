@@ -55,3 +55,4 @@ async function loginHandler(request: NextRequest) {
 export const POST = createAPIRoute(loginHandler, {
   rateLimit: RATE_LIMITS.AUTH
 })
+

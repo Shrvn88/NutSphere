@@ -33,3 +33,4 @@ export default function SortDropdown({ currentSort }: SortDropdownProps) {
     </select>
   )
 }
+

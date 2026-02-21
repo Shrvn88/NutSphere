@@ -48,7 +48,7 @@ export async function GET(request: NextRequest, { params }: Props) {
     yPos += 5
     doc.text('Phone: +91 87665 00291', 20, yPos)
     yPos += 5
-    doc.text('FSSAI License: 1121599900840', 20, yPos)
+    doc.text('FSSAI License: 11525048000250', 20, yPos)
     
     doc.setTextColor(0, 0, 0) // Reset to black
 

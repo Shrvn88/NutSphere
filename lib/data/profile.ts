@@ -29,3 +29,4 @@ export async function updateProfile(data: {
 
   return { success: true }
 }
+

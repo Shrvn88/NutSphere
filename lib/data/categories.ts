@@ -58,3 +58,4 @@ export const getCategoryBySlug = cache(async (slug: string): Promise<Category | 
 
   return data
 })
+

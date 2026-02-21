@@ -117,7 +117,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">FSSAI License</h3>
-                    <p className="text-gray-600 font-mono">1121599900840</p>
+                    <p className="text-gray-600 font-mono">11525048000250</p>
                   </div>
                 </div>
               </div>
@@ -351,3 +351,4 @@ export default function ContactPage() {
     </div>
   )
 }
+
