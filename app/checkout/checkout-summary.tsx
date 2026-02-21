@@ -46,13 +46,6 @@ export default function CheckoutSummary({ items, subtotal, discount, paymentMeth
           <span>{formatPrice(subtotal)}</span>
         </div>
         
-        {discount > 0 && (
-          <div className="flex justify-between text-green-600">
-            <span>Discount</span>
-            <span>-{formatPrice(discount)}</span>
-          </div>
-        )}
-        
         <div className="flex justify-between text-gray-600">
           <div className="flex items-center gap-1">
             <span>COD Fees</span>

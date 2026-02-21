@@ -172,8 +172,7 @@ export async function GET(
     doc.setFont('helvetica', 'bold')
     doc.text('Item', 20, yPos)
     doc.text('Qty', 110, yPos)
-    doc.text('Price', 130, yPos)
-    doc.text('Discount', 155, yPos)
+    doc.text('MRP', 130, yPos)
     doc.text('Total', 190, yPos, { align: 'right' })
     
     yPos += 2
@@ -195,7 +194,6 @@ export async function GET(
       doc.text(itemName, 20, yPos)
       doc.text(item.quantity.toString(), 110, yPos)
       doc.text(formatPriceForPDF(item.unit_price), 130, yPos)
-      doc.text(item.discount_percentage > 0 ? `${item.discount_percentage}%` : '-', 155, yPos)
       doc.text(formatPriceForPDF(item.line_total), 190, yPos, { align: 'right' })
 
       yPos += 10
@@ -209,12 +207,6 @@ export async function GET(
     doc.text('Subtotal:', 140, yPos)
     doc.text(formatPriceForPDF(order.subtotal), 190, yPos, { align: 'right' })
     yPos += 7
-
-    if (order.discount_amount > 0) {
-      doc.text('Discount:', 140, yPos)
-      doc.text(`-${formatPriceForPDF(order.discount_amount)}`, 190, yPos, { align: 'right' })
-      yPos += 7
-    }
 
     doc.text('COD Fees:', 140, yPos)
     doc.text(order.shipping_cost === 0 ? 'FREE' : formatPriceForPDF(order.shipping_cost), 190, yPos, { align: 'right' })

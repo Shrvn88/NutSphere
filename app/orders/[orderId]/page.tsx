@@ -166,13 +166,6 @@ export default async function OrderConfirmationPage({ params }: Readonly<Props>)
               <span>{formatPrice(order.subtotal)}</span>
             </div>
             
-            {order.discount_amount > 0 && (
-              <div className="flex justify-between text-green-600">
-                <span>Discount</span>
-                <span>-{formatPrice(order.discount_amount)}</span>
-              </div>
-            )}
-            
             <div className="flex justify-between text-gray-600">
               <span>COD Fees</span>
               <span>{order.shipping_cost === 0 ? 'FREE' : formatPrice(order.shipping_cost)}</span>

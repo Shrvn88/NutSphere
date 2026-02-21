@@ -196,7 +196,7 @@ export default function ProductForm({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
-            Price (₹)
+            MRP
           </label>
           <input
             id="price"
