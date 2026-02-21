@@ -161,7 +161,7 @@ export async function GET(request: NextRequest, { params }: Props) {
       yPos += 7
     }
 
-    doc.text('Shipping:', 140, yPos)
+    doc.text('COD Fees:', 140, yPos)
     doc.text(order.shipping_cost === 0 ? 'FREE' : formatPriceForPDF(order.shipping_cost), 190, yPos, { align: 'right' })
     yPos += 7
 

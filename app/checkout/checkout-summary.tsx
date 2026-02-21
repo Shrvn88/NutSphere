@@ -55,7 +55,7 @@ export default function CheckoutSummary({ items, subtotal, discount, paymentMeth
         
         <div className="flex justify-between text-gray-600">
           <div className="flex items-center gap-1">
-            <span>Delivery Charges</span>
+            <span>COD Fees</span>
             {paymentMethod === 'online' && (
               <span className="text-xs text-green-600 font-semibold">FREE</span>
             )}

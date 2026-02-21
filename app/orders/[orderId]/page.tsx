@@ -174,7 +174,7 @@ export default async function OrderConfirmationPage({ params }: Readonly<Props>)
             )}
             
             <div className="flex justify-between text-gray-600">
-              <span>Shipping</span>
+              <span>COD Fees</span>
               <span>{order.shipping_cost === 0 ? 'FREE' : formatPrice(order.shipping_cost)}</span>
             </div>
             
