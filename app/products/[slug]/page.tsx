@@ -204,19 +204,19 @@ export default async function ProductDetailPage({ params }: Readonly<Props>) {
               />
             </div>
 
-            {/* Additional Info */}
+            {/* Policy Information */}
             <div className="mt-8 border-t pt-6 space-y-3">
-              <div className="flex items-center gap-3 text-sm text-gray-600">
-                <span>🚚</span>
-                <span>Free delivery on orders above ₹500</span>
+              <div className="flex items-start gap-3 text-sm text-gray-700">
+                <span className="text-lg">🚚</span>
+                <span>Free Delivery Across India on all orders</span>
               </div>
-              <div className="flex items-center gap-3 text-sm text-gray-600">
-                <span>💯</span>
-                <span>Refund for defective products</span>
+              <div className="flex items-start gap-3 text-sm text-gray-700">
+                <span className="text-lg">💯</span>
+                <span>No Returns on Food Products once delivered</span>
               </div>
-              <div className="flex items-center gap-3 text-sm text-gray-600">
-                <span>✓</span>
-                <span>100% authentic products</span>
+              <div className="flex items-start gap-3 text-sm text-gray-700">
+                <span className="text-lg">✓</span>
+                <span>Refunds applicable Only for Damaged, Defective, or incorrect items as per our refund guidelines</span>
               </div>
             </div>
           </div>

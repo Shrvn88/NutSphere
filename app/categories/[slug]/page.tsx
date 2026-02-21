@@ -89,7 +89,7 @@ export default async function CategoryProductsPage({ params, searchParams }: Rea
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {productsData.data.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -107,6 +107,32 @@ export default async function CategoryProductsPage({ params, searchParams }: Rea
             )}
           </>
         )}
+      </div>
+
+      {/* Policy Information Section */}
+      <div className="bg-gray-50 border-t border-gray-200 mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="max-w-3xl mx-auto space-y-4">
+            <div className="flex items-start gap-4 text-gray-700">
+              <span className="text-2xl flex-shrink-0">🚚</span>
+              <div>
+                <p className="font-medium">Free Delivery Across India on all orders</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4 text-gray-700">
+              <span className="text-2xl flex-shrink-0">💯</span>
+              <div>
+                <p className="font-medium">No Returns on Food Products once delivered</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4 text-gray-700">
+              <span className="text-2xl flex-shrink-0">✓</span>
+              <div>
+                <p className="font-medium">Refunds applicable Only for Damaged, Defective, or incorrect items as per our refund guidelines</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

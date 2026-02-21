@@ -3,6 +3,8 @@ import Image from 'next/image'
 import { getProducts } from '@/lib/data/products'
 import { getCategories } from '@/lib/data/categories'
 import ProductCard from '@/components/ProductCard'
+import FreeDeliveryBanner from '@/components/FreeDeliveryBanner'
+import FreeDeliveryCard from '@/components/FreeDeliveryCard'
 
 export default async function HomePage() {
   const [productsData, categories] = await Promise.all([
@@ -14,6 +16,9 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen">
+      {/* Free Delivery Banner - Animated */}
+      <FreeDeliveryBanner />
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-green-50 via-white to-green-50 overflow-hidden">
         <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-5 pointer-events-none" />
@@ -74,12 +79,15 @@ export default async function HomePage() {
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
                     <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                     </svg>
                   </div>
-                  <span>Fast Delivery</span>
+                  <span>Free Delivery</span>
                 </div>
               </div>
+
+              {/* Free Delivery Highlight Card - Animated */}
+              <FreeDeliveryCard />
             </div>
 
             {/* Hero Image */}
@@ -257,7 +265,7 @@ export default async function HomePage() {
           </div>
 
           {featuredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {featuredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

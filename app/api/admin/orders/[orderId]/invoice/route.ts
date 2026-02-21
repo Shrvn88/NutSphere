@@ -90,7 +90,7 @@ export async function GET(
     doc.setTextColor(100, 100, 100)
     doc.setFont('helvetica', 'normal')
     yPos += 6
-    doc.text('THE SPHERE OF SUPERFOODS', 20, yPos)
+    doc.text('NUTSPHERE AGROCOMM', 20, yPos)
     
     doc.setFontSize(9)
     doc.setTextColor(60, 60, 60)
