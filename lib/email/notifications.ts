@@ -120,7 +120,7 @@ export async function sendOrderConfirmationEmail(data: OrderEmailData) {
           <div style="background-color: #1f2937; color: #d1d5db; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; font-size: 12px;">
             <p style="margin: 5px 0;">© 2026 NutSphere. All rights reserved.</p>
             <p style="margin: 5px 0;">H.NO 84, Shivkalyan Nagar Loha, Dist-Nanded 431708</p>
-            <p style="margin: 5px 0;">Phone: +91 87665 00291 | Email: Hello@nutsphere.com</p>
+            <p style="margin: 5px 0;">Phone: +91 87665 00291 | Email: hello@nutsphere.com</p>
             <p style="margin: 10px 0 5px 0;">This is an automated email. Please do not reply.</p>
           </div>
         </body>
@@ -208,7 +208,7 @@ export async function sendOrderShippedEmail(data: ShipmentEmailData) {
           <div style="background-color: #1f2937; color: #d1d5db; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; font-size: 12px;">
             <p style="margin: 5px 0;">© 2026 NutSphere. All rights reserved.</p>
             <p style="margin: 5px 0;">H.NO 84, Shivkalyan Nagar Loha, Dist-Nanded 431708</p>
-            <p style="margin: 5px 0;">Phone: +91 87665 00291 | Email: Hello@nutsphere.com</p>
+            <p style="margin: 5px 0;">Phone: +91 87665 00291 | Email: hello@nutsphere.com</p>
             <p style="margin: 10px 0 5px 0;">This is an automated email. Please do not reply.</p>
           </div>
         </body>
@@ -275,7 +275,7 @@ export async function sendOrderDeliveredEmail(
             
             <div style="background-color: white; padding: 15px; border-radius: 8px; margin: 15px 0;">
               <p style="font-size: 14px; margin: 5px 0;">📞 Phone: <a href="tel:+918766500291" style="color: #2563eb; text-decoration: none;">+91 87665 00291</a></p>
-              <p style="font-size: 14px; margin: 5px 0;">✉️ Email: <a href="mailto:Hello@nutsphere.com" style="color: #2563eb; text-decoration: none;">Hello@nutsphere.com</a></p>
+              <p style="font-size: 14px; margin: 5px 0;">✉️ Email: <a href="mailto:hello@nutsphere.com" style="color: #2563eb; text-decoration: none;">hello@nutsphere.com</a></p>
             </div>
             
             <p style="font-size: 14px; color: #6b7280;">
@@ -286,7 +286,7 @@ export async function sendOrderDeliveredEmail(
           <div style="background-color: #1f2937; color: #d1d5db; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; font-size: 12px;">
             <p style="margin: 5px 0;">© 2026 NutSphere. All rights reserved.</p>
             <p style="margin: 5px 0;">H.NO 84, Shivkalyan Nagar Loha, Dist-Nanded 431708</p>
-            <p style="margin: 5px 0;">Phone: +91 87665 00291 | Email: Hello@nutsphere.com</p>
+            <p style="margin: 5px 0;">Phone: +91 87665 00291 | Email: hello@nutsphere.com</p>
             <p style="margin: 10px 0 5px 0;">This is an automated email. Please do not reply.</p>
           </div>
         </body>
@@ -311,3 +311,4 @@ export async function sendOrderDeliveredEmail(
     return { success: false, error }
   }
 }
+

@@ -75,7 +75,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Email</h3>
-                    <a href="mailto:Hello@nutsphere.com" className="text-gray-600 hover:text-green-600">Hello@nutsphere.com</a>
+                    <a href="mailto:hello@nutsphere.com" className="text-gray-600 hover:text-green-600">hello@nutsphere.com</a>
                   </div>
                 </div>
 

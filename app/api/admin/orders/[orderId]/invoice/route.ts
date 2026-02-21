@@ -99,7 +99,7 @@ export async function GET(
     yPos += 5
     doc.text('Dist-Nanded 431708, Maharashtra', 20, yPos)
     yPos += 5
-    doc.text('Email: orders@nutsphere.com', 20, yPos)
+    doc.text('Email: hello@nutsphere.com', 20, yPos)
     yPos += 5
     doc.text('Phone: +91 87665 00291', 20, yPos)
     yPos += 5

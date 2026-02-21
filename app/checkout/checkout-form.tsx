@@ -113,14 +113,8 @@ export default function CheckoutForm({ user, savedAddresses, onPaymentMethodChan
       router.refresh()
       return
     }
-    
-    if (!result.success) {
-      setError(result.error || 'Failed to create order')
-      setLoading(false)
-      return
-    }
 
-    // Open Razorpay payment modal
+    // Open Razorpay payment modal for online payment
     const options = {
       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
       amount: result.amount,
