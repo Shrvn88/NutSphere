@@ -32,7 +32,7 @@ export default function ProductDetailsClient({
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null)
   
   // Use variant values if selected, otherwise use base product values
-  const currentPrice = selectedVariant ? selectedVariant.price : basePrice
+  const currentPrice = selectedVariant ? selectedVariant.price : baseDiscountedPrice
   const currentComparePrice = selectedVariant?.compare_at_price || (discountPercentage > 0 ? basePrice : null)
   const currentDiscountedPrice = selectedVariant ? selectedVariant.price : baseDiscountedPrice
   const currentStock = selectedVariant ? selectedVariant.stock_quantity : baseStockQuantity
