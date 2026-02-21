@@ -17,17 +17,32 @@ export default function ContactPage() {
     e.preventDefault()
     setStatus('loading')
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    // In production, you would send this to your backend
-    console.log('Contact form submitted:', formData)
-    
-    setStatus('success')
-    setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
-    
-    // Reset status after 5 seconds
-    setTimeout(() => setStatus('idle'), 5000)
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setStatus('success')
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
+        
+        // Reset status after 5 seconds
+        setTimeout(() => setStatus('idle'), 5000)
+      } else {
+        setStatus('error')
+        setTimeout(() => setStatus('idle'), 5000)
+      }
+    } catch (error) {
+      console.error('Error submitting contact form:', error)
+      setStatus('error')
+      setTimeout(() => setStatus('idle'), 5000)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -160,7 +175,18 @@ export default function ContactPage() {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Thank you! Your message has been sent successfully.
+                    Thank you! Your message has been sent successfully. We'll get back to you soon.
+                  </div>
+                </div>
+              )}
+
+              {status === 'error' && (
+                <div className="mb-6 p-4 bg-red-100 border border-red-200 text-red-700 rounded-xl">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Sorry, there was an error sending your message. Please try again or contact us directly.
                   </div>
                 </div>
               )}
