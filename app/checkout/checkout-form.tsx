@@ -99,7 +99,9 @@ export default function CheckoutForm({ user, savedAddresses, onPaymentMethodChan
     }
     
     // Create order on backend first
+    console.log('Creating order with data:', checkoutData)
     const result = await createOrder(checkoutData)
+    console.log('Order creation result:', result)
     
     if (!result.success) {
       setError(result.error || 'Failed to create order')
@@ -109,8 +111,26 @@ export default function CheckoutForm({ user, savedAddresses, onPaymentMethodChan
 
     // If COD, redirect directly to order page
     if (paymentMethod === 'cod') {
-      router.push(`/orders/${result.orderId}`)
-      router.refresh()
+      console.log('COD payment, redirecting to:', `/orders/${result.orderId}`)
+      // Immediately navigate without waiting
+      const redirectUrl = `/orders/${result.orderId}`
+      console.log('Attempting redirect to:', redirectUrl)
+      
+      // Try multiple methods to ensure redirect works
+      try {
+        // Method 1: Direct window location change
+        window.location.assign(redirectUrl)
+      } catch (e) {
+        console.error('Method 1 failed:', e)
+        // Method 2: Fallback to href
+        try {
+          window.location.href = redirectUrl
+        } catch (e2) {
+          console.error('Method 2 failed:', e2)
+          // Method 3: Last resort - router
+          router.push(redirectUrl)
+        }
+      }
       return
     }
 
