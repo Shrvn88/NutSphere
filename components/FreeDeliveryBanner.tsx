@@ -22,7 +22,7 @@ export default function FreeDeliveryBanner() {
         
         {/* Scrolling Text Container */}
         <div className="flex-1 overflow-hidden relative">
-          <div className="animate-marquee whitespace-nowrap inline-block">
+          <div className="delivery-banner-marquee whitespace-nowrap inline-block">
             <span className="text-xs sm:text-sm md:text-base font-semibold mx-4">
               🎉 Free Delivery Across India on All Orders | Enjoy Complimentary Shipping Anywhere in India
             </span>
@@ -32,25 +32,6 @@ export default function FreeDeliveryBanner() {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes marquee {
-          0% {
-            transform: translateX(0%);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        
-        .animate-marquee {
-          animation: marquee 20s linear infinite;
-        }
-        
-        .animate-marquee:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
     </div>
   )
 }

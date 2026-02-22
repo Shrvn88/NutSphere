@@ -162,3 +162,22 @@ body {
   color: var(--ns-green-dark);
   font-weight: 500;
 }
+
+
+/* Delivery Banner Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.delivery-banner-marquee {
+  animation: marquee 20s linear infinite;
+}
+
+.delivery-banner-marquee:hover {
+  animation-play-state: paused;
+}
