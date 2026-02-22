@@ -185,7 +185,11 @@ export default async function ProductDetailPage({ params }: Readonly<Props>) {
             {product.description && (
               <div className="mt-6">
                 <h2 className="text-lg font-semibold text-gray-900">Description</h2>
-                <p className="mt-2 text-gray-600 leading-relaxed">{product.description}</p>
+                <div className="mt-2 text-gray-600 leading-relaxed space-y-2">
+                  {product.description.split(/(?=👉|👍|✓|•)/).filter(line => line.trim()).map((line, index) => (
+                    <p key={index} className="whitespace-pre-line">{line.trim()}</p>
+                  ))}
+                </div>
               </div>
             )}
 

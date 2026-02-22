@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import DeleteProductForm from './delete-product-form'
+import ToggleProductStatus from './toggle-product-status'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -113,13 +114,93 @@ export default async function AdminProductsPage() {
       const { error } = await actionSupabase.from('products').delete().eq('id', productId)
       
       if (error) {
-        throw new Error(`Failed to delete product: ${error.message}`)
+        // If foreign key constraint error, deactivate instead of delete
+        if (error.code === '23503') {
+          const { error: updateError } = await actionSupabase
+            .from('products')
+            .update({ is_active: false })
+            .eq('id', productId)
+          
+          if (updateError) {
+            throw new Error(`Failed to deactivate product: ${updateError.message}`)
+          }
+          
+          console.log('Product deactivated instead of deleted due to existing references')
+        } else {
+          throw new Error(`Failed to delete product: ${error.message}`)
+        }
       }
 
       // Revalidate the products page to refresh the list
       revalidatePath('/admin/products')
     } catch (error) {
       console.error('Delete product error:', error)
+      throw error
+    }
+  }
+
+  async function toggleProductStatus(formData: FormData) {
+    'use server'
+    try {
+      const rawId = formData.get('productId')
+      const rawStatus = formData.get('newStatus')
+      
+      if (typeof rawId !== 'string' || !rawId) {
+        throw new Error('Invalid product ID')
+      }
+      if (typeof rawStatus !== 'string') {
+        throw new Error('Invalid status')
+      }
+      
+      const productId = rawId
+      const newStatus = rawStatus === 'true'
+
+      const actionCookieStore = await cookies()
+      const actionSupabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+          cookies: {
+            getAll() {
+              return actionCookieStore.getAll()
+            },
+            setAll(cookiesToSet) {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                actionCookieStore.set(name, value, options)
+              )
+            },
+          },
+        }
+      )
+
+      const { data: { user } } = await actionSupabase.auth.getUser()
+      if (!user) {
+        throw new Error('Not authenticated')
+      }
+
+      const { data: actionProfile } = await actionSupabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+      if (actionProfile?.role !== 'admin') {
+        throw new Error('Not authorized')
+      }
+
+      const { error } = await actionSupabase
+        .from('products')
+        .update({ is_active: newStatus })
+        .eq('id', productId)
+      
+      if (error) {
+        throw new Error(`Failed to update product status: ${error.message}`)
+      }
+
+      // Revalidate the products page to refresh the list
+      revalidatePath('/admin/products')
+    } catch (error) {
+      console.error('Toggle product status error:', error)
       throw error
     }
   }
@@ -220,7 +301,11 @@ export default async function AdminProductsPage() {
                       >
                         Edit
                       </Link>
-                      <DeleteProductForm productId={product.id} deleteProduct={deleteProduct} />
+                      <ToggleProductStatus 
+                        productId={product.id} 
+                        isActive={product.is_active}
+                        toggleStatus={toggleProductStatus}
+                      />
                     </td>
                   </tr>
                 ))}
