@@ -84,7 +84,10 @@ export const getCart = cache(async (): Promise<CartSummary> => {
   }
   
   // Calculate prices server-side
-  const cartItems: CartItemDisplay[] = (items || []).map(item => {
+  // Filter out any cart items where the corresponding product is missing or deleted
+  const validItems = (items || []).filter(item => item.products !== null && item.products !== undefined)
+
+  const cartItems: CartItemDisplay[] = validItems.map(item => {
     const product = item.products
     const discountedPrice = Math.round(
       product.price * (100 - product.discount_percentage) / 100
@@ -242,6 +245,10 @@ export async function updateCartItemQuantity(
   
   if (fetchError || !cartItem) {
     return { success: false, error: 'Cart item not found' }
+  }
+  
+  if (!cartItem.products) {
+    return { success: false, error: 'Product not found or unavailable' }
   }
   
   if (cartItem.products.stock_quantity < quantity) {

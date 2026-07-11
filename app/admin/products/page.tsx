@@ -71,14 +71,18 @@ export default async function AdminProductsPage() {
 
   async function deleteProduct(formData: FormData) {
     'use server'
+
     try {
       const rawId = formData.get('productId')
+
       if (typeof rawId !== 'string' || !rawId) {
         throw new Error('Invalid product ID')
       }
+
       const productId = rawId
 
       const actionCookieStore = await cookies()
+
       const actionSupabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -96,11 +100,16 @@ export default async function AdminProductsPage() {
         }
       )
 
-      const { data: { user } } = await actionSupabase.auth.getUser()
+      // Check authentication
+      const {
+        data: { user },
+      } = await actionSupabase.auth.getUser()
+
       if (!user) {
         throw new Error('Not authenticated')
       }
 
+      // Check admin role
       const { data: actionProfile } = await actionSupabase
         .from('profiles')
         .select('role')
@@ -111,47 +120,70 @@ export default async function AdminProductsPage() {
         throw new Error('Not authorized')
       }
 
-      const { error } = await actionSupabase.from('products').delete().eq('id', productId)
-      
-      if (error) {
-        // If foreign key constraint error, deactivate instead of delete
-        if (error.code === '23503') {
+      // ---------------------------------
+      // Delete all cart items for product
+      // ---------------------------------
+      const { error: cartError } = await actionSupabase
+        .from('cart_items')
+        .delete()
+        .eq('product_id', productId)
+
+      if (cartError) {
+        throw new Error(`Failed to delete cart items: ${cartError.message}`)
+      }
+
+      // ---------------------------------
+      // Delete the product
+      // ---------------------------------
+      const { error: productError } = await actionSupabase
+        .from('products')
+        .delete()
+        .eq('id', productId)
+
+      if (productError) {
+        // If another table still references this product,
+        // deactivate it instead of deleting.
+        if (productError.code === '23503') {
           const { error: updateError } = await actionSupabase
             .from('products')
-            .update({ is_active: false })
+            .update({
+              is_active: false,
+            })
             .eq('id', productId)
-          
+
           if (updateError) {
-            throw new Error(`Failed to deactivate product: ${updateError.message}`)
+            throw new Error(
+              `Failed to deactivate product: ${updateError.message}`
+            )
           }
-          
-          console.log('Product deactivated instead of deleted due to existing references')
+
+          console.log(
+            'Product deactivated because it is referenced in another table.'
+          )
         } else {
-          throw new Error(`Failed to delete product: ${error.message}`)
+          throw new Error(`Failed to delete product: ${productError.message}`)
         }
       }
 
-      // Revalidate the products page to refresh the list
       revalidatePath('/admin/products')
     } catch (error) {
       console.error('Delete product error:', error)
       throw error
     }
   }
-
   async function toggleProductStatus(formData: FormData) {
     'use server'
     try {
       const rawId = formData.get('productId')
       const rawStatus = formData.get('newStatus')
-      
+
       if (typeof rawId !== 'string' || !rawId) {
         throw new Error('Invalid product ID')
       }
       if (typeof rawStatus !== 'string') {
         throw new Error('Invalid status')
       }
-      
+
       const productId = rawId
       const newStatus = rawStatus === 'true'
 
@@ -192,7 +224,7 @@ export default async function AdminProductsPage() {
         .from('products')
         .update({ is_active: newStatus })
         .eq('id', productId)
-      
+
       if (error) {
         throw new Error(`Failed to update product status: ${error.message}`)
       }
@@ -271,11 +303,10 @@ export default async function AdminProductsPage() {
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          product.stock_quantity < 10
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${product.stock_quantity < 10
                             ? 'bg-red-100 text-red-800'
                             : 'bg-green-100 text-green-800'
-                        }`}
+                          }`}
                       >
                         {product.stock_quantity} units
                       </span>
@@ -285,11 +316,10 @@ export default async function AdminProductsPage() {
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          product.is_active
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${product.is_active
                             ? 'bg-green-100 text-green-800'
                             : 'bg-gray-100 text-gray-800'
-                        }`}
+                          }`}
                       >
                         {product.is_active ? 'Active' : 'Inactive'}
                       </span>
@@ -301,8 +331,8 @@ export default async function AdminProductsPage() {
                       >
                         Edit
                       </Link>
-                      <ToggleProductStatus 
-                        productId={product.id} 
+                      <ToggleProductStatus
+                        productId={product.id}
                         isActive={product.is_active}
                         toggleStatus={toggleProductStatus}
                       />
