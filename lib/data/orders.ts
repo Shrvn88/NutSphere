@@ -6,6 +6,7 @@ import { getCart, clearCart } from '@/lib/data/cart'
 import { createRazorpayOrder, createRefund } from '@/lib/razorpay'
 import { sendOrderConfirmationEmail } from '@/lib/email/notifications'
 import type { Database } from '@/types/database.types'
+import { COD_CHARGE } from '@/lib/constants'
 
 type OrderInsert = Database['public']['Tables']['orders']['Insert']
 type OrderItemInsert = Database['public']['Tables']['order_items']['Insert']
@@ -78,8 +79,8 @@ export async function createOrder(checkoutData: CheckoutData): Promise<{
   // Calculate totals (GST is included in product prices)
   const subtotal = cart.subtotal
   const discountAmount = cart.discount
-  // COD: ₹49 delivery charge, Online: FREE delivery
-  const shippingCost = checkoutData.paymentMethod === 'cod' ? 49 : 0
+  // COD: ₹${COD_CHARGE} delivery charge, Online: FREE delivery
+  const shippingCost = checkoutData.paymentMethod === 'cod' ? COD_CHARGE : 0
   const taxAmount = 0 // GST is included in product prices
   const totalAmount = subtotal + shippingCost
   

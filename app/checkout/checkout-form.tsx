@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createOrder } from '@/lib/data/orders'
 import type { User } from '@supabase/supabase-js'
+import { COD_CHARGE } from '@/lib/constants'
 
 // Razorpay types
 declare global {
@@ -456,7 +457,7 @@ export default function CheckoutForm({ user, savedAddresses, onPaymentMethodChan
           <div className="inline-block">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-gray-900">Cash on Delivery (COD)</span>
-              <span className="px-2 py-0.5 bg-orange-100 text-orange-800 text-xs font-semibold rounded-full">+ ₹49 Delivery</span>
+              <span className="px-2 py-0.5 bg-orange-100 text-orange-800 text-xs font-semibold rounded-full">+ ₹{COD_CHARGE} Delivery</span>
             </div>
             <p className="text-sm text-gray-600 mt-1">Pay when you receive your order</p>
           </div>
@@ -464,7 +465,7 @@ export default function CheckoutForm({ user, savedAddresses, onPaymentMethodChan
         
         {paymentMethod === 'cod' && (
           <div className="mt-3 p-3 bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-lg text-sm">
-            <strong>💡 Tip:</strong> Choose Online Payment to save ₹49 and get FREE delivery!
+            <strong>💡 Tip:</strong> Choose Online Payment to save ₹{COD_CHARGE} and get FREE delivery!
           </div>
         )}
       </div>
@@ -499,7 +500,7 @@ export default function CheckoutForm({ user, savedAddresses, onPaymentMethodChan
       <p className="text-xs text-gray-500 text-center">
         {paymentMethod === 'online' 
           ? 'By placing this order, you agree to our terms and conditions. Your payment will be processed securely by Razorpay.'
-          : 'By placing this order, you agree to our terms and conditions. You will pay ₹49 delivery charges + order amount when you receive your order.'}
+          : `By placing this order, you agree to our terms and conditions. You will pay ₹${COD_CHARGE} delivery charges + order amount when you receive your order.`}
       </p>
     </form>
   )

@@ -341,7 +341,7 @@ function generateInvoiceHTML(order: any) {
           </div>
           <div class="total-row">
             <span>COD Fees</span>
-            <span>₹0.00</span>
+            <span>₹${(order.shipping_cost || 0).toFixed(2)}</span>
           </div>
           <div class="total-row grand-total">
             <span>Grand Total</span>
